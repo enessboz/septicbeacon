@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Article Editor | RVFixWise CMS</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+<aside class="admin-side">
+  <a class="brand" href="/rvf-control-8n4k"><span class="brandmark">R</span>RVFixWise <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+  <div class="admin-group-label">İçerik</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k">▦ Dashboard</a>
+    <a href="/rvf-control-8n4k/articles">✎ İçerik Kütüphanesi</a>
+    <a class="active" href="/rvf-control-8n4k/quick-entry">＋ Quick Entry</a>
+    <a href="/rvf-control-8n4k/media">▧ Media Library</a>
+    <a href="/rvf-control-8n4k/topic-map">◉ Topic Map</a>
+    <a href="/rvf-control-8n4k/calendar">▣ Content Calendar</a>
+    <a href="/rvf-control-8n4k/refresh">↻ Refresh Queue</a>
+  </nav>
+  <div class="admin-group-label">SEO & Growth</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/seo">◎ SEO Overview</a>
+    <a href="/rvf-control-8n4k/gsc">G Search Console</a>
+    <a href="/rvf-control-8n4k/opportunities">↗ Content Opportunities</a>
+    <a href="/rvf-control-8n4k/internal-links">⛓ Internal Links</a>
+    <a href="/rvf-control-8n4k/crawl">⌘ Crawl Monitor</a>
+    <a href="/rvf-control-8n4k/site-health">♥ Site Health</a>
+    <a href="/rvf-control-8n4k/redirects">↪ Redirects</a>
+  </nav>
+  <div class="admin-group-label">Data & Sistem</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/analytics">▥ Analytics & Revenue</a>
+    <a href="/rvf-control-8n4k/integrations">⚙ Integrations</a>
+  </nav>
+  <div class="admin-side-foot">RVFixWise CMS<br>İnsan onaylı yayın akışı</div>
+</aside>
+
+<main class="admin-main">
+<form id="quick-entry-form">
+  <div class="admin-top">
+    <div><div class="subtle">Content editor</div><h1 id="editor-heading">Article Editor</h1></div>
+    <div class="admin-actions">
+      <button id="top-preview" class="btn" type="button">Preview</button>
+      <button class="btn primary" type="submit" value="draft">Save draft</button>
+    </div>
+  </div>
+
+  <div class="work-banner">
+    <div>
+      <b>ChatGPT Work için optimize edildi</b>
+      <p>Tek ekran, minimum tıklama. Makale Markdown olarak tek alana girilir ve doğrudan Supabase'e kaydedilir.</p>
+    </div>
+    <span class="work-badge">LIVE CMS</span>
+  </div>
+
+  <div class="quick-editor">
+    <section class="quick-main">
+      <div class="import-box">
+        <strong>Tek seferde içerik paketi girişi</strong>
+        <p>Slug ve canonical boş bırakılırsa otomatik hazırlanır. Work bu alanları doğrudan doldurabilir.</p>
+        <div class="mini-actions">
+          <button id="validate-fields" class="btn" type="button">Alanları kontrol et</button>
+          <button id="clear-form" class="btn" type="button">Formu temizle</button>
+        </div>
+      </div>
+
+      <div class="quick-section">
+        <h2>Article details <span class="autofill">AUTO-FILL READY</span></h2>
+        <div class="quick-grid">
+          <div class="quick-field full"><label for="title">Article title</label><input id="title" name="title"></div>
+          <div class="quick-field"><label for="slug">Slug <span class="autofill">title’dan</span></label><input id="slug" name="slug"></div>
+          <div class="quick-field"><label for="content_type">Content type</label><select id="content_type" name="content_type"><option value="troubleshooting">Troubleshooting</option><option value="how_to">How-to</option><option value="maintenance">Maintenance</option><option value="guide">Guide</option><option value="best">Best</option><option value="comparison">Comparison</option></select></div>
+          <div class="quick-field"><label for="category_id">Category</label><select id="category_id" name="category_id"><option value="">Kategoriler yükleniyor…</option></select></div>
+          <div class="quick-field"><label for="primary_keyword">Primary keyword</label><input id="primary_keyword" name="primary_keyword"></div>
+          <div class="quick-field full"><label for="search_intent">Search intent / one-line goal</label><input id="search_intent" name="search_intent"></div>
+          <div class="quick-field full"><label for="excerpt">Excerpt / intro summary</label><textarea id="excerpt" name="excerpt" rows="3"></textarea></div>
+        </div>
+      </div>
+
+      <details class="editor-advanced"><summary>SEO & URL settings</summary><div class="editor-advanced-body"><div class="quick-grid">
+          <div class="quick-field full"><label for="seo_title">SEO title</label><input id="seo_title" name="seo_title" maxlength="70"><div class="helper"><span id="seo-title-count">0</span>/70 karakter</div></div>
+          <div class="quick-field full"><label for="meta_description">Meta description</label><textarea id="meta_description" name="meta_description" maxlength="180" rows="3"></textarea><div class="helper"><span id="meta-count">0</span>/180 karakter</div></div>
+          <div class="quick-field full"><label for="canonical_path">Canonical path <span class="autofill">slug’dan</span></label><input id="canonical_path" name="canonical_path"></div>
+        </div></div></details>
+      <div class="quick-section">
+        <h2>Article <span class="autofill">MARKDOWN</span></h2>
+        <div class="quick-field full">
+          <label for="content_markdown">Complete article body</label>
+          <textarea id="content_markdown" name="content_markdown" class="article-markdown" placeholder="## Quick answer&#10;&#10;Article content…"></textarea>
+          <div class="helper"><span id="body-count">0</span> karakter • H2/H3, listeler, blockquote ve Markdown linkleri desteklenir.</div>
+        </div>
+      </div>
+
+      <details class="editor-advanced"><summary>Sources & internal links</summary><div class="editor-advanced-body"><div class="quick-grid">
+          <div class="quick-field"><label for="sources_text">Sources • her satır bir kaynak</label><textarea id="sources_text" name="sources_text" class="line-input" rows="6" placeholder="Manufacturer manual | https://example.com/manual | manufacturer"></textarea><div class="helper">Örnek: Manufacturer manual | https://example.com/manual | manufacturer</div></div>
+          <div class="quick-field"><label for="internal_links_text">Internal links • her satır bir link</label><textarea id="internal_links_text" name="internal_links_text" class="line-input" rows="6" placeholder="Anchor text | /plumbing/article/"></textarea><div class="helper">Örnek: RV water system guide | /plumbing/how-rv-water-system-works/</div></div>
+        </div></div></details>
+      <div class="quick-section media-editor-section">
+        <h2>Images <span class="autofill">AUTO WEBP</span></h2>
+        <p class="helper media-intro">JPG, PNG veya WebP yükleyebilirsin. Tarayıcı görseli otomatik küçültür, sıkıştırır ve WebP olarak Media Library’ye yollar.</p>
+
+        <div class="media-editor-grid">
+          <div class="media-editor-card">
+            <div class="media-editor-head">
+              <div><b>Featured image</b><span>Blog yazısının ana görseli</span></div>
+              <button id="choose-featured-image" class="btn" type="button">Media Library’den seç</button>
+            </div>
+            <div id="featured-image-stage" class="featured-image-stage is-empty">
+              <img id="featured-image-preview" alt="" hidden>
+              <div id="featured-image-empty"><b>Henüz ana görsel yok</b><span>16:9 yatay görsel en iyi sonucu verir.</span></div>
+            </div>
+            <input type="hidden" id="featured_image_url" name="featured_image_url">
+            <div class="quick-grid media-fields">
+              <div class="quick-field full"><label for="featured_image_file">Upload image</label><input id="featured_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div>
+              <div class="quick-field full"><label for="featured_image_alt">Alt text</label><input id="featured_image_alt" name="featured_image_alt" placeholder="Describe what is visible in the image"></div>
+              <div class="quick-field full"><label for="featured_image_prompt">Image brief / prompt <span class="subtle">(optional)</span></label><textarea id="featured_image_prompt" name="featured_image_prompt" rows="2"></textarea></div>
+            </div>
+            <div class="mini-actions">
+              <button id="generate-featured-image" class="btn primary" type="button">Generate with AI</button>
+              <button id="upload-featured-image" class="btn" type="button">Upload image</button>
+              <button id="remove-featured-image" class="btn" type="button">Remove</button>
+            </div>
+            <div id="featured-image-status" class="cms-message"></div>
+          </div>
+
+          <div class="media-editor-card">
+            <div class="media-editor-head">
+              <div><b>Article image</b><span>İçerikte imlecin olduğu yere eklenir</span></div>
+              <button id="choose-article-image" class="btn" type="button">Library’den ekle</button>
+            </div>
+            <div class="quick-grid media-fields">
+              <div class="quick-field full"><label for="article_image_prompt">AI image brief</label><textarea id="article_image_prompt" rows="2" placeholder="Describe the exact RV component, action or troubleshooting scene"></textarea></div>
+              <div class="quick-field full"><label for="article_image_heading">Insert after heading <span class="subtle">(optional)</span></label><input id="article_image_heading" placeholder="Example: Check Converter Output Voltage"></div>
+              <div class="quick-field full"><label for="article_image_alt">Alt text</label><input id="article_image_alt" placeholder="Example: RV water pump inlet hose"></div>
+              <div class="quick-field full"><label for="article_image_caption">Caption <span class="subtle">(optional)</span></label><input id="article_image_caption" placeholder="Short explanatory caption"></div>
+              <details class="media-upload-fallback"><summary>Upload your own image</summary><div class="quick-field full" style="margin-top:10px"><label for="article_image_file">Image file</label><input id="article_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div></details>
+            </div>
+            <div class="mini-actions">
+              <button id="generate-article-image" class="btn primary" type="button">Generate & insert with AI</button>
+              <button id="upload-article-image" class="btn" type="button">Upload & insert</button>
+            </div>
+            <div class="media-rule"><span>Output</span><code>WebP · max 2000px · quality optimized</code></div>
+            <div id="article-image-status" class="cms-message"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-section">
+        <h2>Publishing <span class="autofill">AUTO PUBLISH</span></h2>
+        <div class="quick-grid">
+          <div class="quick-field">
+            <label for="scheduled_at_local">Publish date &amp; time</label>
+            <input id="scheduled_at_local" name="scheduled_at_local" type="datetime-local">
+            <div class="helper">Timezone: <span id="schedule-timezone">America/New_York</span></div>
+          </div>
+          <div class="quick-field">
+            <label>Automatic publishing</label>
+            <button class="btn primary" type="submit" value="schedule">Schedule Publish</button>
+            <div class="helper">The Worker checks scheduled content every minute.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <button id="autosave-submit" type="submit" value="autosave" hidden></button>
+        <button id="save-draft" class="btn" type="submit" value="draft">Save Draft</button>
+        <button id="run-checks" class="btn" type="button">Run publish checks</button>
+        <button class="btn primary" type="submit" value="publish">Publish Now</button>
+      </div>
+      <div id="qe-message" class="cms-message" aria-live="polite"></div>
+    </section>
+
+    <aside class="quick-side">
+      <div class="quick-side-card">
+        <div class="publish-score"><div><b>Publish Gate</b><div class="subtle">Canlı form kontrolü</div></div><div id="live-score" class="score-ring">0</div></div>
+        <div class="gate-list">
+          <div class="gate-row"><span>Title / slug</span><span id="gate-title" class="gate-warn">Eksik</span></div>
+          <div class="gate-row"><span>SEO metadata</span><span id="gate-seo" class="gate-warn">Eksik</span></div>
+          <div class="gate-row"><span>Article body</span><span id="gate-body" class="gate-warn">Eksik</span></div>
+          <div class="gate-row"><span>Sources</span><span id="gate-sources" class="gate-warn">0</span></div>
+          <div class="gate-row"><span>Internal links</span><span id="gate-links" class="gate-warn">0</span></div>
+          
+        </div>
+      </div>
+
+      <div class="quick-side-card"><h3 style="margin-top:0">System</h3><div class="side-list"><div><span>Database</span><b id="cms-db-state">Connecting…</b></div><div><span>Autosave</span><b id="autosave-state">Waiting</b></div><div><span>Publishing gate</span><b>Active</b></div><div><span>Images</span><b>Workers AI + R2</b></div></div><button id="open-revisions" class="btn" type="button" style="width:100%;margin-top:12px">Version history</button></div>
+      <div class="quick-side-card"><h3 style="margin-top:0">Preview</h3><div id="editor-preview" class="preview-box">Başlık ve içerik girdikçe burada özet görünür.</div></div>
+    </aside>
+  </div>
+</form>
+</main>
+</div>
+
+<div id="preview-modal" class="cms-modal" hidden>
+  <div class="cms-modal-backdrop" data-close-preview></div>
+  <div class="cms-modal-panel"><div class="cms-modal-head"><h2>Article Preview</h2><button type="button" class="btn" data-close-preview>Kapat</button></div><article id="preview-content" class="article-body"></article></div>
+</div>
+
+<div id="revision-modal" class="cms-modal" hidden>
+  <div class="cms-modal-backdrop" data-close-revisions></div>
+  <div class="cms-modal-panel revision-modal-panel">
+    <div class="cms-modal-head"><div><h2>Version history</h2><div class="subtle">Snapshots created before major manual edits and publishing.</div></div><button type="button" class="btn" data-close-revisions>Close</button></div>
+    <div id="revision-list" class="revision-list"><div class="empty-state">No revisions loaded.</div></div>
+  </div>
+</div>
+
+<div id="media-picker-modal" class="cms-modal media-picker-modal" hidden>
+  <div class="cms-modal-backdrop" data-close-media-picker></div>
+  <div class="cms-modal-panel media-picker-panel">
+    <div class="cms-modal-head">
+      <div><h2>Media Library</h2><div class="subtle">WebP görsellerinden seç</div></div>
+      <button type="button" class="btn" data-close-media-picker>Kapat</button>
+    </div>
+    <div id="media-picker-grid" class="media-library-grid"></div>
+  </div>
+</div>
+
+<script type="module" src="/cms.js"></script>
+</body>
+</html>
