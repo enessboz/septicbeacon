@@ -25,13 +25,13 @@ async function articleById(env, site, id) {
   return (await r.json())[0] || null;
 }
 
-function safeBase(value = "rv-image") {
-  return String(value || "rv-image")
+function safeBase(value = "septic-image") {
+  return String(value || "septic-image")
     .toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 72) || "rv-image";
+    .slice(0, 72) || "septic-image";
 }
 
 function extensionFor(contentType) {
@@ -64,7 +64,7 @@ export const MEDIA_TOOLS = [
   {
     name: "generate_article_image",
     title: "Generate SepticBeacon article image",
-    description: "Generate an RV-related image with Cloudflare Workers AI, store it in SepticBeacon R2 media, and attach it as a featured or inline article image.",
+    description: "Generate a realistic septic-system editorial image with Cloudflare Workers AI, store it in SepticBeacon R2 media, and attach it as a featured or inline article image.",
     inputSchema: {
       type: "object",
       required: ["article_id", "prompt", "alt_text", "placement"],
@@ -148,7 +148,7 @@ export async function importMediaFromUrl(env, args = {}) {
   if (bytes.byteLength > 8 * 1024 * 1024) throw new Error("Image is larger than 8 MB.");
 
   const now = new Date();
-  const original = decodeURIComponent(remote.pathname.split("/").pop() || "rv-image");
+  const original = decodeURIComponent(remote.pathname.split("/").pop() || "septic-image");
   const base = safeBase(original.replace(/\.[^.]+$/, "") || args.alt_text);
   const key = site + "/" + now.getUTCFullYear() + "/" + String(now.getUTCMonth() + 1).padStart(2, "0") + "/" + base + "-" + Date.now().toString(36) + "." + ext;
   const alt = String(args.alt_text || "").trim().slice(0, 500);
@@ -254,7 +254,7 @@ export async function addArticleImage(env, args = {}) {
 async function saveGeneratedImage(env, article, args, jpegBytes, siteOverride=null) {
   const site = siteOverride || article.site_id || await siteId(env);
   const now = new Date();
-  const base = safeBase(article.slug || args.alt_text || "rv-image");
+  const base = safeBase(article.slug || args.alt_text || "septic-image");
   const key = site + "/" + now.getUTCFullYear() + "/" + String(now.getUTCMonth() + 1).padStart(2, "0") + "/" + base + "-ai-" + Date.now().toString(36) + ".jpg";
   const alt = String(args.alt_text || "").trim().slice(0, 500);
 
@@ -361,16 +361,17 @@ export async function generateArticleImage(env, args = {}) {
   const prompt = String(args.prompt || "").trim();
   if (prompt.length < 10) throw new Error("A descriptive image prompt is required.");
 
-  const rvPrompt = [
-    "Create a realistic editorial photograph for an RV repair and maintenance website.",
+  const septicPrompt = [
+    "Create a realistic editorial photograph for a U.S. residential septic-system maintenance and troubleshooting website.",
     "Topic: " + prompt,
-    "The image should look practical, trustworthy, technically plausible, and useful to an RV owner.",
-    "Natural lighting, clean composition, realistic RV components, no logos, no watermarks, no text overlay.",
-    "Avoid unsafe repair behavior, exaggerated damage, fantasy elements, or clutter."
+    "The image should look practical, trustworthy, technically plausible, and useful to a homeowner.",
+    "Use realistic residential yards, septic access lids, drainfield context, service tools, plumbing or inspection details only when relevant.",
+    "Natural daylight, restrained documentary composition, realistic materials, no logos, no watermarks, no text overlay.",
+    "Do not show anyone entering a septic tank, unsafe confined-space behavior, graphic sewage, exaggerated damage, fantasy elements, or staged stock-photo gestures."
   ].join(" ");
 
   const generated = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", {
-    prompt: rvPrompt.slice(0, 2048),
+    prompt: septicPrompt.slice(0, 2048),
     steps: Math.min(8, Math.max(1, Number(args.steps || 4)))
   });
 
