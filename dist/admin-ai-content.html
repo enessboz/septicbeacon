@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Content Automation | SepticBeacon CMS</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+:root{--ai:#6548f5;--ai2:#8167ff;--ai-soft:#f2efff;--ai-line:#e7e4f4;--ai-green:#148a5a;--ai-blue:#2574e8;--ai-orange:#d9722d}
+.ai-page{max-width:1500px;margin:0 auto}.ai-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}.ai-head h1{margin:0;font-size:32px;letter-spacing:-1.2px}.ai-head p{margin:4px 0 0;color:#6d7684;font-size:14px}.ai-badge{display:inline-flex;gap:7px;align-items:center;padding:8px 11px;border:1px solid var(--ai-line);background:#fff;border-radius:10px;font-size:12px;font-weight:750}.ai-tabs{display:flex;gap:8px;border-bottom:1px solid #e8e8ef;margin-bottom:18px;overflow:auto}.ai-tab{border:0;background:none;padding:12px 14px;color:#586177;font-weight:750;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent}.ai-tab.active{color:var(--ai);border-color:var(--ai)}.ai-grid{display:grid;grid-template-columns:1fr 1.15fr 1fr 1.1fr;gap:12px}.ai-card{background:#fff;border:1px solid #e5e8ec;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(20,24,35,.025)}.ai-card-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:15px}.ai-step{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:var(--ai-soft);color:var(--ai);font-size:13px;font-weight:850;flex:0 0 auto}.ai-card h3{font-size:14px;margin:1px 0 2px}.ai-card-head small{display:block;color:#85909c;font-size:11px}.ai-label{display:block;font-size:11px;font-weight:800;color:#46505f;margin:12px 0 6px}.ai-input,.ai-select,.ai-textarea{width:100%;border:1px solid #dce1e7;background:#fff;border-radius:8px;padding:9px 10px;font:inherit;font-size:12px;outline:none}.ai-input:focus,.ai-select:focus,.ai-textarea:focus{border-color:#9f91f8;box-shadow:0 0 0 3px rgba(101,72,245,.08)}.ai-textarea{min-height:138px;resize:vertical;line-height:1.55}.ai-two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ai-radio{display:flex;align-items:center;gap:8px;font-size:11px;margin:8px 0}.ai-radio input{accent-color:var(--ai)}.ai-switchrow{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:11px;margin:9px 0}.ai-switch{appearance:none;width:32px;height:18px;border-radius:20px;background:#cfd5dc;position:relative;cursor:pointer;transition:.2s}.ai-switch:after{content:"";position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;left:2px;top:2px;transition:.2s;box-shadow:0 1px 4px #0002}.ai-switch:checked{background:var(--ai)}.ai-switch:checked:after{left:16px}.ai-model{display:grid;grid-template-columns:1.25fr .75fr;gap:8px;align-items:center;margin-bottom:9px}.ai-model .tag{justify-self:start;padding:5px 8px;border-radius:999px;background:#eaf8ef;color:var(--ai-green);font-size:10px;font-weight:800}.ai-model .tag.blue{background:#eaf3ff;color:var(--ai-blue)}.ai-model .tag.purple{background:var(--ai-soft);color:var(--ai)}.ai-range{width:100%;accent-color:var(--ai)}.ai-btn{width:100%;border:0;border-radius:9px;padding:11px 14px;background:linear-gradient(90deg,var(--ai),var(--ai2));color:white;font-weight:800;cursor:pointer;margin-top:14px}.ai-btn.secondary{background:#fff;color:#3b4350;border:1px solid #dce1e7}.ai-btn:disabled{opacity:.55;cursor:not-allowed}.ai-bottom{display:grid;grid-template-columns:.9fr 1.3fr;gap:12px;margin-top:12px}.ai-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.ai-kpi{border:1px solid #e4e7ec;border-radius:10px;padding:11px;background:#fbfbfd}.ai-kpi b{display:block;font-size:16px}.ai-kpi span{font-size:10px;color:#818a97}.topic-row{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eef0f3;font-size:11px}.topic-row:last-child{border-bottom:0}.topic-num{width:20px;height:20px;border-radius:50%;background:#f1f3f7;display:grid;place-items:center;color:#7b8491;font-size:10px}.topic-tag{padding:4px 7px;border-radius:999px;background:#ebf4ff;color:#2470ca;font-size:9px}.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid #eceef2;border-top:1px solid #eceef2}.cal-day,.cal-cell{border-right:1px solid #eceef2;border-bottom:1px solid #eceef2;min-height:32px;padding:5px;font-size:9px}.cal-day{text-align:center;min-height:auto;background:#fafbfc;font-weight:800;color:#697382}.cal-cell{height:58px;color:#798391}.cal-event{display:block;margin-top:4px;border-left:3px solid var(--ai-green);padding-left:4px;color:#46505d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ai-empty{padding:30px;text-align:center;color:#7e8794;font-size:12px}.ai-notice{display:none;margin-bottom:14px;padding:10px 12px;border-radius:9px;background:#edf8f1;color:#16643f;border:1px solid #cfeada;font-size:12px}.ai-notice.show{display:block}.ai-panel{display:none}.ai-panel.active{display:block}.ai-doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ai-help{font-size:11px;color:#838d99;line-height:1.5}.ai-chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.ai-chip{padding:5px 8px;border-radius:7px;background:#f1f3f7;font-size:10px;color:#505966}.ai-footerbar{margin-top:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;color:#7a8490;font-size:11px}.ai-footerbar .actions{display:flex;gap:8px}.ai-smallbtn{border:1px solid #dfe3e8;background:#fff;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:750;cursor:pointer}
+@media(max-width:1250px){.ai-grid{grid-template-columns:1fr 1fr}.ai-bottom{grid-template-columns:1fr}.ai-doc-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.ai-grid{grid-template-columns:1fr}.ai-kpis{grid-template-columns:1fr 1fr}.ai-two{grid-template-columns:1fr}.ai-head{flex-direction:column}}
+</style>
+</head>
+<body class="admin-body" data-admin-view="ai-content">
+<div class="admin-shell">
+<aside class="admin-side">
+<a class="brand" href="/sb-control-8n4k"><span class="brandmark">R</span>SepticBeacon <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+<div class="admin-group-label">Content</div>
+<nav class="admin-menu">
+<a href="/sb-control-8n4k">▦ Dashboard</a>
+<a href="/sb-control-8n4k/articles">✎ Content Library</a>
+<a href="/sb-control-8n4k/quick-entry">＋ Quick Entry</a>
+<a class="active" href="/sb-control-8n4k/ai-content">✦ AI Content</a>
+<a href="/sb-control-8n4k/media">▧ Media Library</a>
+<a href="/sb-control-8n4k/topic-map">◉ Topic Map</a>
+<a href="/sb-control-8n4k/calendar">▣ Content Calendar</a>
+<a href="/sb-control-8n4k/refresh">↻ Refresh Queue</a>
+</nav>
+<div class="admin-group-label">SEO & Growth</div>
+<nav class="admin-menu">
+<a href="/sb-control-8n4k/seo">◎ SEO Overview</a>
+<a href="/sb-control-8n4k/gsc">G Search Console</a>
+<a href="/sb-control-8n4k/opportunities">↗ Content Opportunities</a>
+<a href="/sb-control-8n4k/internal-links">⛓ Internal Links</a>
+<a href="/sb-control-8n4k/crawl">⌘ Crawl Monitor</a>
+<a href="/sb-control-8n4k/site-health">♥ Site Health</a>
+</nav>
+<div class="admin-group-label">Operations</div>
+<nav class="admin-menu"><a href="/sb-control-8n4k/alerts">! Alerts</a><a href="/sb-control-8n4k/ai-jobs">✦ Jobs</a></nav>
+<div class="admin-side-foot">SepticBeacon CMS<br>Supabase + Cloudflare</div>
+</aside>
+<main class="admin-main"><div class="ai-page">
+<div class="ai-head">
+<div><h1>✦ AI Content Automation</h1><p>Plan, generate, review and schedule high-quality SEO content with AI.</p></div>
+<div class="ai-badge">SepticBeacon <span style="color:#a2a9b3">•</span> Content Engine</div>
+</div>
+<div id="ai-notice" class="ai-notice"></div>
+<div class="ai-tabs" role="tablist">
+<button class="ai-tab active" data-tab="campaign">Campaigns</button>
+<button class="ai-tab" data-tab="planner">Content Planner</button>
+<button class="ai-tab" data-tab="prompts">Templates & Prompts</button>
+<button class="ai-tab" data-tab="brand">Brand & Tone</button>
+<button class="ai-tab" data-tab="models">AI Models</button>
+<button class="ai-tab" data-tab="automation">Automation</button>
+</div>
+
+<section class="ai-panel active" data-panel="campaign">
+<div class="ai-grid">
+<div class="ai-card"><div class="ai-card-head"><span class="ai-step">1</span><div><h3>Campaign Details</h3><small>Set up your monthly content campaign.</small></div></div>
+<label class="ai-label">Campaign Name</label><input class="ai-input" id="campaign-name" value="October 2026 Content">
+<label class="ai-label">Target Month</label><input class="ai-input" id="target-month" type="month" value="2026-10">
+<div class="ai-two"><div><label class="ai-label">Number of Articles</label><input class="ai-input" id="article-count" type="number" min="1" max="100" value="20"></div><div><label class="ai-label">Publishing Schedule</label><select class="ai-select" id="publish-rate"><option>5 per week</option><option>3 per week</option><option>Daily</option><option>2 per week</option></select></div></div>
+<div class="ai-two"><div><label class="ai-label">Start Date</label><input class="ai-input" id="start-date" type="date" value="2026-10-01"></div><div><label class="ai-label">Mode</label><label class="ai-radio"><input type="radio" name="mode" value="review" checked> Review before scheduling</label><label class="ai-radio"><input type="radio" name="mode" value="auto"> Fully automatic</label></div></div>
+<button class="ai-btn" id="generate-plan">✦ Generate Content Plan</button>
+</div>
+
+<div class="ai-card"><div class="ai-card-head"><span class="ai-step">2</span><div><h3>Content Settings</h3><small>Configure your editorial preferences.</small></div></div>
+<label class="ai-label">Categories</label><div class="ai-chip-wrap"><span class="ai-chip">Maintenance ×</span><span class="ai-chip">Repairs ×</span><span class="ai-chip">Tips ×</span><span class="ai-chip">Buying Guide ×</span></div>
+<label class="ai-label">Target Keywords <span style="font-weight:500;color:#9aa2ac">(optional)</span></label><input class="ai-input" id="keywords" placeholder="Add keywords, comma separated">
+<div class="ai-two"><div><label class="ai-label">Article Length</label><select class="ai-select" id="length"><option>2,000 – 2,500 words</option><option>1,500 – 2,000 words</option><option>2,500 – 3,500 words</option><option>SERP-based dynamic</option></select></div><div><label class="ai-label">Language</label><select class="ai-select" id="language"><option>English (US)</option><option>English (UK)</option></select></div></div>
+<label class="ai-label">Content Quality Threshold <b id="quality-value" style="float:right;color:var(--ai)">9.0 / 10</b></label><input class="ai-range" id="quality" type="range" min="7" max="10" step=".1" value="9">
+<label class="ai-switchrow"><span>Auto-suggest internal links</span><input class="ai-switch" id="internal-links" type="checkbox" checked></label>
+<label class="ai-switchrow"><span>Include FAQ section when relevant</span><input class="ai-switch" id="faq" type="checkbox" checked></label>
+<label class="ai-switchrow"><span>Add schema-ready data</span><input class="ai-switch" id="schema" type="checkbox" checked></label>
+</div>
+
+<div class="ai-card"><div class="ai-card-head"><span class="ai-step">3</span><div><h3>AI Configuration</h3><small>Route each task to the right model.</small></div></div>
+<label class="ai-label">Topic Research & Brief</label><div class="ai-model"><select class="ai-select"><option>GPT-5.6 Luna</option><option>GPT-5.6 Terra</option><option>GPT-5.6 Sol</option></select><span class="tag">Fast & affordable</span></div>
+<label class="ai-label">Article Writing</label><div class="ai-model"><select class="ai-select"><option>GPT-5.6 Terra</option><option>GPT-5.6 Sol</option><option>GPT-5.6 Luna</option></select><span class="tag blue">High quality</span></div>
+<label class="ai-label">Review & Editing</label><div class="ai-model"><select class="ai-select"><option>GPT-5.6 Sol</option><option>GPT-5.6 Terra</option></select><span class="tag purple">Best quality</span></div>
+<label class="ai-label">SEO & Metadata</label><div class="ai-model"><select class="ai-select"><option>GPT-5.6 Luna</option><option>GPT-5.6 Terra</option></select><span class="tag">Efficient</span></div>
+<label class="ai-label">Image Generation</label><select class="ai-select" id="image-model"><option>OpenAI Image API</option><option>Disabled</option></select>
+<label class="ai-switchrow"><span>Featured image per article</span><input class="ai-switch" id="featured-image" type="checkbox" checked></label>
+<div class="ai-two"><div><label class="ai-label">In-article images</label><select class="ai-select" id="inline-images"><option>2</option><option>1</option><option>3</option><option>0</option></select></div><div><label class="ai-label">Image Style</label><select class="ai-select"><option>Realistic, no text</option><option>Editorial illustration</option><option>Technical diagram</option></select></div></div>
+<label class="ai-switchrow"><span>Auto-generate ALT text</span><input class="ai-switch" type="checkbox" checked></label>
+</div>
+
+<div class="ai-card"><div class="ai-card-head"><span class="ai-step">4</span><div><h3>Brand & Tone</h3><small>Keep every article consistent.</small></div></div>
+<label class="ai-label">Brand Voice</label><select class="ai-select"><option>Helpful & Practical</option><option>Expert & Direct</option></select>
+<label class="ai-label">Tone of Voice</label><select class="ai-select"><option>Conversational</option><option>Professional</option><option>Technical</option></select>
+<label class="ai-label">Target Audience</label><select class="ai-select"><option>RV Owners (Beginners & Experienced)</option><option>First-time RV Owners</option><option>Experienced DIY Owners</option></select>
+<label class="ai-label">Content Rules</label><textarea class="ai-textarea" id="rules">• Write factual, accurate and genuinely helpful content
+• Answer search intent early and clearly
+• Avoid generic AI-sounding language and filler
+• Use real-life RV troubleshooting examples
+• Explain risks and safety limits where relevant
+• Include pros and cons when useful
+• Keep paragraphs readable and scannable
+• Never invent measurements, specs or sources
+• Use internal links naturally, never force them
+• Optimize for helpful content, not keyword stuffing</textarea>
+<button class="ai-btn secondary" id="save-defaults">Save as Default</button>
+</div>
+</div>
+
+<div class="ai-bottom">
+<div class="ai-card"><div class="ai-card-head"><span class="ai-step">✓</span><div><h3>Campaign Preview</h3><small>What this campaign will create.</small></div></div>
+<div class="ai-kpis"><div class="ai-kpi"><b id="kpi-articles">20</b><span>Articles</span></div><div class="ai-kpi"><b id="kpi-rate">5/wk</b><span>Publishing</span></div><div class="ai-kpi"><b id="kpi-images">60</b><span>Images est.</span></div><div class="ai-kpi"><b>9.0+</b><span>QA threshold</span></div></div>
+<div id="topic-preview"></div><div class="ai-footerbar"><span>Preview topics are editable before generation.</span><a href="/sb-control-8n4k/topic-map" style="color:var(--ai);font-weight:800">Open Topic Map →</a></div>
+</div>
+<div class="ai-card"><div class="cal-head"><div><h3 style="margin:0;font-size:14px">Publishing Calendar</h3><small style="color:#87919e">Draft schedule preview</small></div><a class="ai-smallbtn" href="/sb-control-8n4k/calendar">Open Calendar</a></div>
+<div class="cal-grid" id="calendar-preview"></div>
+</div>
+</div>
+</section>
+
+<section class="ai-panel" data-panel="planner"><div class="ai-card"><div class="ai-card-head"><span class="ai-step">P</span><div><h3>Content Planner</h3><small>Turn keyword opportunities into an editorial plan.</small></div></div><div class="ai-doc-grid"><div><label class="ai-label">Planning Prompt</label><textarea class="ai-textarea" style="min-height:250px">Build a monthly SEO content plan for SepticBeacon. Prioritize useful troubleshooting, maintenance and ownership queries with clear search intent. Avoid cannibalization with existing articles. Group related topics into clusters and recommend internal links.</textarea></div><div><label class="ai-label">Planning Rules</label><textarea class="ai-textarea" style="min-height:250px">1. Check existing content before suggesting a topic.
+2. Prioritize high-intent and problem-solving queries.
+3. Avoid near-duplicate titles.
+4. Mix evergreen troubleshooting, maintenance and buying guidance.
+5. Define primary keyword, intent, article type and supporting links.
+6. Flag topics requiring stronger factual verification.</textarea></div></div></div></section>
+
+<section class="ai-panel" data-panel="prompts"><div class="ai-doc-grid"><div class="ai-card"><h3>Writer Prompt</h3><textarea class="ai-textarea" style="min-height:340px">You are the senior content writer for SepticBeacon. Use the approved brief, search intent, brand voice and content rules. Produce an original, practical article that helps an RV owner solve the problem. Lead with the useful answer, then explain diagnosis, steps, trade-offs and safety limits. Do not pad the article to hit a word count. Do not invent facts.</textarea></div><div class="ai-card"><h3>Reviewer Prompt</h3><textarea class="ai-textarea" style="min-height:340px">Act as a strict independent editor. Score the article from 0–10 for intent satisfaction, factual discipline, usefulness, structure, natural writing, SEO fit, repetition and brand consistency. List concrete defects. Anything below the configured threshold must be revised and reviewed again before scheduling.</textarea></div></div></section>
+
+<section class="ai-panel" data-panel="brand"><div class="ai-card"><h3>SepticBeacon Editorial System</h3><p class="ai-help">This is the persistent source of truth used by planning, writing, review and image prompting.</p><div class="ai-doc-grid"><div><label class="ai-label">Tone of Voice</label><textarea class="ai-textarea" style="min-height:280px">Practical, calm, clear and experienced. Helpful without sounding salesy or overconfident. Explain technical RV issues in plain English. Be direct when a DIY fix is reasonable and equally direct when a qualified technician is the safer choice.</textarea></div><div><label class="ai-label">Non-negotiable Content Rules</label><textarea class="ai-textarea" style="min-height:280px">No invented facts or fake sources.
+No keyword stuffing.
+No generic introductions.
+No repetitive conclusions.
+No fake first-hand experience.
+No unnecessary em dashes or AI clichés.
+Use tables/checklists only when they improve comprehension.
+Keep advice specific to the actual RV problem.
+Preserve canonical article URLs as /blog/{slug}.</textarea></div></div></div></section>
+
+<section class="ai-panel" data-panel="models"><div class="ai-card"><h3>Model Routing</h3><p class="ai-help">Recommended routing keeps quality high while avoiding expensive models for mechanical tasks.</p><div class="table-card" style="padding:0;margin-top:14px"><table><thead><tr><th>Stage</th><th>Model</th><th>Role</th></tr></thead><tbody><tr><td>Research / briefs</td><td>GPT-5.6 Luna</td><td>Fast structured planning</td></tr><tr><td>Article writer</td><td>GPT-5.6 Terra</td><td>Primary long-form generation</td></tr><tr><td>Review / final QA</td><td>GPT-5.6 Sol</td><td>Strict quality gate</td></tr><tr><td>Meta / schema / ALT</td><td>GPT-5.6 Luna</td><td>Low-cost structured work</td></tr><tr><td>Images</td><td>OpenAI Image API</td><td>Unique featured + article visuals</td></tr></tbody></table></div></div></section>
+
+<section class="ai-panel" data-panel="automation"><div class="ai-card"><h3>Automation Pipeline</h3><div class="ai-doc-grid"><div><label class="ai-switchrow"><span>Generate briefs before articles</span><input class="ai-switch" type="checkbox" checked></label><label class="ai-switchrow"><span>Run independent reviewer</span><input class="ai-switch" type="checkbox" checked></label><label class="ai-switchrow"><span>Auto-revise failed articles</span><input class="ai-switch" type="checkbox" checked></label><label class="ai-switchrow"><span>Generate unique images</span><input class="ai-switch" type="checkbox" checked></label><label class="ai-switchrow"><span>Generate metadata & schema</span><input class="ai-switch" type="checkbox" checked></label><label class="ai-switchrow"><span>Prepare internal links</span><input class="ai-switch" type="checkbox" checked></label></div><div><label class="ai-label">Quality Gate</label><p class="ai-help">Plan → Brief → Write → Review → Revise if below threshold → Image generation → SEO metadata → Draft/approval → Schedule → Existing Cloudflare scheduled publishing.</p><div class="ai-chip-wrap"><span class="ai-chip">Score ≥ 9.0</span><span class="ai-chip">No duplicate intent</span><span class="ai-chip">Image uniqueness</span><span class="ai-chip">Internal link check</span><span class="ai-chip">Human review mode</span></div></div></div></div></section>
+</div></main></div>
+<script type="module" src="/cms.js"></script>
+<script>
+const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+const topics=["How to Winterize Your RV (Complete Checklist)","Common RV Furnace Problems and Fixes","How Often Should You Replace RV Tires?","Best RV Battery Options for Off-Grid Travel","How to Clean and Maintain Your RV Black Tank"];
+function render(){
+ const n=Math.max(1,Number(q("#article-count").value||20)), inline=Number(q("#inline-images").value||0), featured=q("#featured-image").checked?1:0;
+ q("#kpi-articles").textContent=n;q("#kpi-rate").textContent=q("#publish-rate").value==="5 per week"?"5/wk":q("#publish-rate").value;
+ q("#kpi-images").textContent=n*(inline+featured);
+ q("#quality-value").textContent=Number(q("#quality").value).toFixed(1)+" / 10";
+ q("#topic-preview").innerHTML=topics.map((t,i)=>'<div class="topic-row"><span class="topic-num">'+(i+1)+'</span><span>'+t+'</span><span class="topic-tag">'+["Maintenance","Repairs","Maintenance","Buying Guide","Tips"][i]+'</span></div>').join("");
+ const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];let out=days.map(d=>'<div class="cal-day">'+d+'</div>').join("");
+ for(let i=0;i<35;i++){const day=i-3;out+='<div class="cal-cell">'+(day>0&&day<=31?day:"")+(day>0&&day<=16&&[1,2,5,6,7,8,9,12,13,14,15,16].includes(day)?'<span class="cal-event">'+topics[day%topics.length]+'</span>':"")+'</div>'} q("#calendar-preview").innerHTML=out;
+}
+qa(".ai-tab").forEach(b=>b.onclick=()=>{qa(".ai-tab").forEach(x=>x.classList.remove("active"));qa(".ai-panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");q('[data-panel="'+b.dataset.tab+'"]').classList.add("active")});
+["#article-count","#publish-rate","#quality","#inline-images","#featured-image"].forEach(s=>q(s)?.addEventListener("input",render));
+function notice(msg){const n=q("#ai-notice");n.textContent=msg;n.classList.add("show");setTimeout(()=>n.classList.remove("show"),4500)}
+q("#save-defaults").onclick=()=>{localStorage.setItem("rvf_ai_rules",q("#rules").value);notice("AI content defaults saved in this browser.")}
+q("#generate-plan").onclick=()=>{render();notice("Campaign configuration is ready. API execution will use this plan after model credentials are connected.");}
+const saved=localStorage.getItem("rvf_ai_rules");if(saved)q("#rules").value=saved;render();
+</script>
+</body></html>
