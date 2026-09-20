@@ -93,32 +93,6 @@ if(loginPath){
     }
   });
 
-  $("#signup")?.addEventListener("click",async ()=>{
-    const email=$("#email").value.trim();
-    const password=$("#password").value;
-    if(!email||!password||password.length<8){
-      $("#message").textContent="Enter your email and a password with at least 8 characters.";
-      return;
-    }
-    $("#signup").disabled=true;
-    $("#message").textContent="Creating your SepticBeacon admin account…";
-    try{
-      const s=await api("/auth/v1/signup",{
-        method:"POST",auth:false,
-        body:JSON.stringify({email,password,data:{name:"SepticBeacon Owner"}})
-      });
-      if(s?.access_token&&s?.refresh_token){
-        saveSession(s);
-        location.replace(ADMIN_BASE);
-        return;
-      }
-      $("#message").textContent="Account created. Check your email to confirm it, then return here and sign in.";
-    }catch(err){
-      $("#message").textContent=err.message||"Account creation failed.";
-    }finally{
-      $("#signup").disabled=false;
-    }
-  });
 }
 async function site(){const r=await api("/rest/v1/sites?domain=eq.septicbeacon.com&select=id,name,timezone");if(!r.length)throw new Error("Site record not found");currentSiteTimezone=r[0].timezone||"America/New_York";return r[0]}
 const statusLabel=s=>({draft:"Draft",editorial_qa:"Editorial QA",technical_review:"Technical Review",ready:"Ready",scheduled:"Scheduled",published:"Published",refresh:"Refresh",archived:"Archived"}[s]||s);
