@@ -1,53 +1,31 @@
-# SepticBeacon Publisher
+# SepticBeacon
 
-A small GitHub Actions bridge that publishes JSON jobs to the WordPress REST API at **https://septicbeacon.com**.
+Custom Cloudflare Worker + Supabase publishing platform for [septicbeacon.com](https://septicbeacon.com).
 
-## Required GitHub Actions secrets
+## Architecture
 
-Add these under **Settings → Secrets and variables → Actions → New repository secret**:
+- Cloudflare Worker: routing, SSR injection, security headers, cron publishing
+- Cloudflare static assets: public frontend + protected admin UI
+- Supabase: sites, articles, categories, auth, workflow, revisions, SEO/integration data
+- Cloudflare R2: article media
+- GitHub Actions: validation and production deploy
+- Admin: `/sb-control-8n4k`
+- Public article routes: `/blog/{slug}`
+- Public category routes: `/category/{slug}`
 
-- `WP_USERNAME` — the WordPress username that owns the Application Password.
-- `WP_APP_PASSWORD` — the WordPress Application Password. Spaces are accepted.
+## Editorial workflow
 
-Never commit either value to this repository.
+Draft → Editorial QA → Technical Review → Ready → Scheduled/Published.
 
-## Test the connection
+## SepticBeacon taxonomy
 
-Open **Actions → Publish to SepticBeacon → Run workflow**, turn on **Only test the WordPress connection**, and run it.
+- Septic Basics
+- Maintenance
+- Problems & Fixes
+- Costs & Inspections
+- System Types
+- Parts & Sizing
 
-## Update an existing post
+The platform is derived from the RVFixWise application architecture, while its public design, taxonomy, content and brand are SepticBeacon-specific.
 
-Create a JSON file in `posts/`:
-
-```json
-{
-  "action": "update",
-  "id": 171,
-  "expect_slug": "selling-house-with-bad-septic-system",
-  "content": "<p>New article HTML...</p>",
-  "excerpt": "New excerpt.",
-  "status": "publish"
-}
-```
-
-When the file is committed to `main`, GitHub Actions sends it to the WordPress REST API.
-
-## Create a post
-
-```json
-{
-  "action": "create",
-  "title": "Example title",
-  "slug": "example-title",
-  "content": "<p>Article HTML...</p>",
-  "excerpt": "Example excerpt.",
-  "status": "draft",
-  "categories": [5]
-}
-```
-
-## Safety
-
-For updates, use `expect_slug`. The publisher checks the current WordPress slug before writing so an incorrect post ID does not overwrite the wrong article.
-
-SEO plugin fields such as Rank Math metadata may require additional REST exposure in WordPress. Core post publishing works through the standard WordPress REST API.
+The legacy WordPress publisher files are retained temporarily for historical reference only. The WordPress publishing workflow is disabled on the platform rebuild branch.
