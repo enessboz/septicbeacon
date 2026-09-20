@@ -719,7 +719,7 @@ function injectArticleAssets(html,a){
       <span>COMMON QUESTIONS</span>
       <div>
         <h2 id="${escapeHtml(hit[1])}">${hit[2]}</h2>
-        <p>Quick answers to the questions RV owners usually ask after working through this guide.</p>
+        <p>Quick answers to the questions homeowners usually ask after working through this guide.</p>
       </div>
     </div>
     <div class="rvf-faq-list">
@@ -864,14 +864,14 @@ function articleAiToolsHtml(a){
 function articleRelatedSidebarHtml(a){
   const related=Array.isArray(a.related)?a.related.slice(0,3):[];
   if(!related.length)return "";
-  const links=related.map(function(item){ return '<a href="/blog/'+escapeHtml(item.slug)+'"><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml((item.categories&&item.categories.name)||"RV Guide")+'</small></a>'; }).join("");
+  const links=related.map(function(item){ return '<a href="/blog/'+escapeHtml(item.slug)+'"><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml((item.categories&&item.categories.name)||"Septic Guide")+'</small></a>'; }).join("");
   return '<div class="rvf-side-card rvf-side-related"><span>MORE SEPTICBEACON GUIDES</span><strong>Keep reading</strong><div class="rvf-side-related-list">'+links+'</div></div>';
 }
 
 function articleRelatedBottomHtml(a,category){
   const related=Array.isArray(a.related)?a.related.slice(0,3):[];
-  if(!related.length)return '<div class="rvf-related-grid"><a href="/category/'+escapeHtml(category.slug||"guides")+'"><small>MORE FROM THIS SYSTEM</small><strong>'+escapeHtml(category.name||"RV Guides")+'</strong><i>→</i></a><a href="/guides"><small>GUIDE LIBRARY</small><strong>Browse all RV guides</strong><i>→</i></a></div>';
-  const cards=related.map(function(item){ const media=item.featured_image_url?'<div class="rvf-related-article-media"><img src="'+escapeHtml(item.featured_image_url)+'" alt="'+escapeHtml(item.featured_image_alt||"")+'" loading="lazy"></div>':'<div class="rvf-related-article-media is-fallback"><span>'+escapeHtml((item.categories&&item.categories.name)||"RV")+'</span></div>'; return '<a class="rvf-related-article" href="/blog/'+escapeHtml(item.slug)+'">'+media+'<div class="rvf-related-article-copy"><small>'+escapeHtml((item.categories&&item.categories.name)||"RV Guide")+'</small><strong>'+escapeHtml(item.title)+'</strong><span>Read guide →</span></div></a>'; }).join("");
+  if(!related.length)return '<div class="rvf-related-grid"><a href="/category/'+escapeHtml(category.slug||"guides")+'"><small>MORE FROM THIS SYSTEM</small><strong>'+escapeHtml(category.name||"Septic Guides")+'</strong><i>→</i></a><a href="/guides"><small>GUIDE LIBRARY</small><strong>Browse all septic guides</strong><i>→</i></a></div>';
+  const cards=related.map(function(item){ const media=item.featured_image_url?'<div class="rvf-related-article-media"><img src="'+escapeHtml(item.featured_image_url)+'" alt="'+escapeHtml(item.featured_image_alt||"")+'" loading="lazy"></div>':'<div class="rvf-related-article-media is-fallback"><span>'+escapeHtml((item.categories&&item.categories.name)||"RV")+'</span></div>'; return '<a class="rvf-related-article" href="/blog/'+escapeHtml(item.slug)+'">'+media+'<div class="rvf-related-article-copy"><small>'+escapeHtml((item.categories&&item.categories.name)||"Septic Guide")+'</small><strong>'+escapeHtml(item.title)+'</strong><span>Read guide →</span></div></a>'; }).join("");
   return '<div class="rvf-related-articles">'+cards+'</div>';
 }
 function articleHtml(a){
@@ -894,7 +894,7 @@ function articleHtml(a){
 
         <div class="rvf-blog-feature-card ${a.featured_image_url?"has-image":"no-image"}">
           <div class="rvf-blog-feature-copy">
-            <span class="badge">${escapeHtml(category.name||"RV Guide")}</span>
+            <span class="badge">${escapeHtml(category.name||"Septic Guide")}</span>
             <h1>${escapeHtml(a.title)}</h1>
             ${a.excerpt?`<p class="rvf-blog-feature-deck">${escapeHtml(a.excerpt)}</p>`:""}
             <div class="rvf-blog-byline">
@@ -930,17 +930,17 @@ function articleHtml(a){
 
           <div class="article-end-note">
             <strong>SepticBeacon editorial note</strong>
-            <p>This guide is educational. Stop and use a qualified RV technician when a procedure involves unsafe electrical, propane, structural or pressurized-system work beyond your experience.</p>
+            <p>This guide is educational. Stop and use a qualified septic professional when a procedure involves unsafe electrical, propane, structural or pressurized-system work beyond your experience.</p>
           </div>
         </article>
 
-        <section class="rvf-related-block" aria-label="Related RV guides">
-                  <div class="rvf-related-head"><span>KEEP READING</span><h2>Related RV guides</h2></div>
+        <section class="rvf-related-block" aria-label="Related septic guides">
+                  <div class="rvf-related-head"><span>KEEP READING</span><h2>Related septic guides</h2></div>
                   ${articleRelatedBottomHtml(a,category)}
                 </section>
 
         <section class="rvf-blog-cta">
-          <div><span>SEPTICBEACON</span><h2>Diagnose first. Replace parts second.</h2><p>Use the guide library to continue troubleshooting by symptom or RV system.</p></div>
+          <div><span>SEPTICBEACON</span><h2>Diagnose first. Replace parts second.</h2><p>Use the guide library to continue troubleshooting by symptom or septic system.</p></div>
           <a class="btn lime" href="/guides">Find the next guide</a>
         </section>
       </main>
@@ -950,8 +950,8 @@ function articleHtml(a){
         ${articleRelatedSidebarHtml(a)}
         <div class="rvf-side-card">
           <span>NEED ANOTHER PATH?</span>
-          <strong>Browse by RV system</strong>
-          <p>Jump to plumbing, electrical, HVAC, maintenance and more.</p>
+          <strong>Browse by septic system</strong>
+          <p>Jump to maintenance, problems, costs, system types and more.</p>
           <a href="/">Explore systems →</a>
         </div>
       </aside>
@@ -962,12 +962,12 @@ function categoryHtml(data){
   const c=data.category,articles=data.articles||[];
   const categoryArt=categoryImage(c.slug,c.name);
   return `<section class="category-hero"><div class="wrap">
-    <div class="breadcrumb"><a href="/">Home</a> / RV Systems / ${escapeHtml(c.name)}</div>
+    <div class="breadcrumb"><a href="/">Home</a> / Septic Topics / ${escapeHtml(c.name)}</div>
     <div class="category-hero-card">
       <div class="category-hero-copy">
         <div class="kicker"><span class="dot"></span> ${escapeHtml(c.name)}</div>
-        <h1>${escapeHtml(c.name)} RV guides</h1>
-        <p>${escapeHtml(c.description||"Practical troubleshooting and maintenance guidance for this RV system.")}</p>
+        <h1>${escapeHtml(c.name)} septic guides</h1>
+        <p>${escapeHtml(c.description||"Practical troubleshooting and maintenance guidance for this septic system.")}</p>
         <div class="category-hero-actions"><a class="btn lime" href="/search.html?q=${encodeURIComponent(c.name)}">Search ${escapeHtml(c.name)}</a><a class="btn ghost-light" href="/guides">All guides</a></div>
       </div>
       <div class="category-hero-art"><img src="${categoryArt}" alt="" width="220" height="220"><div class="category-stat"><b>${articles.length}</b><span>Published guides</span></div></div>
@@ -983,7 +983,7 @@ function categoryHtml(data){
           <div class="article-copy">
             <div class="meta"><span class="badge">${escapeHtml(a.content_type||"Guide")}</span>${a.published_at?`<span>${escapeHtml(new Date(a.published_at).toLocaleDateString("en-US",{month:"short",year:"numeric"}))}</span>`:""}</div>
             <h3>${escapeHtml(a.title)}</h3>
-            <p>${escapeHtml(a.excerpt||"Open this practical RV guide.")}</p>
+            <p>${escapeHtml(a.excerpt||"Open this practical septic guide.")}</p>
             <span class="card-link">Read guide →</span>
           </div>
         </a>`;
@@ -1040,7 +1040,7 @@ function homeCategoriesHtml(categories){
   if(!categories.length)return '<div class="empty-state">System libraries will appear here as they are published.</div>';
   return categories.map(c=>`<a class="topic topic-vector" href="/category/${escapeHtml(c.slug)}">
     <div class="topic-icon-image"><img src="${categoryImage(c.slug,c.name)}" alt="" loading="lazy" width="72" height="72"></div>
-    <div class="topic-copy"><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||"RV troubleshooting and maintenance guidance.")}</p></div>
+    <div class="topic-copy"><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.description||"septic maintenance and troubleshooting guidance.")}</p></div>
     <span class="topic-arrow" aria-hidden="true">→</span>
   </a>`).join("");
 }
@@ -1055,7 +1055,7 @@ function homeArticlesHtml(articles){
       <div class="article-copy">
         <div class="meta"><span class="badge">${escapeHtml(a.categories?.name||a.content_type||"Guide")}</span>${a.published_at?`<span>${escapeHtml(new Date(a.published_at).toLocaleDateString("en-US",{month:"short",year:"numeric"}))}</span>`:""}</div>
         <h3>${escapeHtml(a.title)}</h3>
-        <p>${escapeHtml(a.excerpt||"Open this practical RV guide.")}</p>
+        <p>${escapeHtml(a.excerpt||"Open this practical septic guide.")}</p>
         <span class="card-link">Read guide →</span>
       </div>
     </a>`;
@@ -1065,7 +1065,7 @@ function homeArticlesHtml(articles){
 function guidesHtml(data){
   const articles=data.articles||[];
   const categories=data.categories||[];
-  if(!articles.length)return `<div class='blog-index-empty'><h2>Fresh RV guides are on the way.</h2><p>Use the system library while new articles are being published.</p><a class='btn primary' href='/'>Browse RV systems</a></div>`;
+  if(!articles.length)return `<div class='blog-index-empty'><h2>Fresh septic guides are on the way.</h2><p>Use the system library while new articles are being published.</p><a class='btn primary' href='/'>Browse septic systems</a></div>`;
 
   const featured=articles[0];
   const latest=articles.slice(1);
@@ -1075,7 +1075,7 @@ function guidesHtml(data){
 
   const categoryLinks=categories.map(c=>`<a class='blog-system-pill' href='/category/${escapeHtml(c.slug)}'>
     <span class='blog-system-pill-art'><img src='${categoryImage(c.slug,c.name)}' alt='' width='34' height='34' loading='lazy'></span>
-    <span><b>${escapeHtml(c.name)}</b><small>${escapeHtml(c.description||'RV troubleshooting and maintenance')}</small></span>
+    <span><b>${escapeHtml(c.name)}</b><small>${escapeHtml(c.description||'septic maintenance and troubleshooting')}</small></span>
     <i aria-hidden='true'>→</i>
   </a>`).join('');
 
@@ -1088,9 +1088,9 @@ function guidesHtml(data){
         <img src='${escapeHtml(img)}' alt='${escapeHtml(a.featured_image_alt||'')}' loading='lazy' decoding='async'>
       </a>
       <div class='blog-index-card-copy'>
-        <div class='blog-index-card-meta'><a href='/category/${escapeHtml(a.categories?.slug||'guides')}'>${escapeHtml(a.categories?.name||'RV Guide')}</a>${date?`<span>${escapeHtml(date)}</span>`:''}</div>
+        <div class='blog-index-card-meta'><a href='/category/${escapeHtml(a.categories?.slug||'guides')}'>${escapeHtml(a.categories?.name||'Septic Guide')}</a>${date?`<span>${escapeHtml(date)}</span>`:''}</div>
         <h2><a href='/blog/${escapeHtml(a.slug)}'>${escapeHtml(a.title)}</a></h2>
-        <p>${escapeHtml(a.excerpt||'Practical RV troubleshooting and maintenance guidance.')}</p>
+        <p>${escapeHtml(a.excerpt||'Practical septic maintenance and troubleshooting guidance for homeowners.')}</p>
         <a class='blog-index-read' href='/blog/${escapeHtml(a.slug)}'>Read guide <span>→</span></a>
       </div>
     </article>`;
@@ -1102,7 +1102,7 @@ function guidesHtml(data){
         <img src='${escapeHtml(featureImage)}' alt='${escapeHtml(featured.featured_image_alt||'')}' decoding='async'>
       </a>
       <div class='blog-index-feature-copy'>
-        <div class='blog-index-feature-meta'><a href='/category/${escapeHtml(featured.categories?.slug||'guides')}'>${escapeHtml(featured.categories?.name||'RV Guide')}</a>${featureDate?`<span>${escapeHtml(featureDate)}</span>`:''}</div>
+        <div class='blog-index-feature-meta'><a href='/category/${escapeHtml(featured.categories?.slug||'guides')}'>${escapeHtml(featured.categories?.name||'Septic Guide')}</a>${featureDate?`<span>${escapeHtml(featureDate)}</span>`:''}</div>
         <span class='blog-index-feature-label'>LATEST GUIDE</span>
         <h2><a href='/blog/${escapeHtml(featured.slug)}'>${escapeHtml(featured.title)}</a></h2>
         <p>${escapeHtml(featured.excerpt||'Open the latest SepticBeacon guide.')}</p>
@@ -1111,7 +1111,7 @@ function guidesHtml(data){
     </section>
 
     ${categoryLinks?`<section class='blog-index-systems'>
-      <div class='blog-index-section-head'><div><span>BROWSE BY SYSTEM</span><h2>Start with the part of your RV you are working on.</h2></div><a href='/#systems'>View all systems →</a></div>
+      <div class='blog-index-section-head'><div><span>BROWSE BY SYSTEM</span><h2>Start with the part of your septic system you need help with.</h2></div><a href='/#systems'>View all systems →</a></div>
       <div class='blog-system-pills'>${categoryLinks}</div>
     </section>`:''}
 
@@ -1121,7 +1121,7 @@ function guidesHtml(data){
     </section>
 
     <section class='blog-index-search-cta'>
-      <div><span>NOT SURE WHERE TO START?</span><h2>Search by the symptom you are seeing.</h2><p>Use plain language such as “water pump runs but no water” or “RV AC not cooling.”</p></div>
+      <div><span>NOT SURE WHERE TO START?</span><h2>Search by the symptom you are seeing.</h2><p>Use plain language such as “septic smell outside” or “how often should I pump my tank.”</p></div>
       <a class='btn lime' href='/search.html'>Search SepticBeacon</a>
     </section>
   </div>`;
@@ -1129,7 +1129,7 @@ function guidesHtml(data){
 function homePopularHtml(articles){
   if(!articles.length){
     return `<a class="check" href="/search.html"><i>1</i><span>Search the SepticBeacon guide library</span></a>
-      <a class="check" href="/#systems"><i>2</i><span>Browse by RV system</span></a>`;
+      <a class="check" href="/#systems"><i>2</i><span>Browse by septic system</span></a>`;
   }
   return articles.slice(0,4).map((a,i)=>`<a class="check" href="/blog/${escapeHtml(a.slug)}">
     <i>${i+1}</i><span>${escapeHtml(a.title)}</span>
@@ -1205,7 +1205,7 @@ async function mediaUpload(request,env,url){
   if(bytes.byteLength>5*1024*1024)return Response.json({error:"Optimized image is still larger than 5 MB."},{status:413});
   if(!isValidWebP(bytes))return Response.json({error:"Upload body is not a valid WebP image."},{status:415});
 
-  const name=safeMediaName(url.searchParams.get("name")||"rv-image");
+  const name=safeMediaName(url.searchParams.get("name")||"septic-image");
   const alt=String(url.searchParams.get("alt")||"").slice(0,500);
   const caption=String(url.searchParams.get("caption")||"").slice(0,1200);
   const rawWidth=Number(url.searchParams.get("width")||0);
@@ -1784,7 +1784,7 @@ export default {
           const canonical=new URL(`/blog/${routeData.slug}`,url.origin).href;
           const description=routeData.meta_description||routeData.excerpt||"";
           const ogImage=routeData.featured_image_url?new URL(routeData.featured_image_url,url.origin).href:null;
-          const categoryName=routeData.categories?.name||"RV Guides";
+          const categoryName=routeData.categories?.name||"Septic Guides";
           const categorySlug=routeData.categories?.slug||"guides";
           const jsonLd={
             "@context":"https://schema.org",
@@ -1832,7 +1832,7 @@ export default {
 
     if(routeType==="article"&&routeData){
       const title=`${routeData.seo_title||routeData.title} | SepticBeacon`;
-      const description=routeData.meta_description||routeData.excerpt||"Practical RV troubleshooting and maintenance guidance.";
+      const description=routeData.meta_description||routeData.excerpt||"Practical septic maintenance and troubleshooting guidance for homeowners.";
       const canonical=new URL(`/blog/${routeData.slug}`,url.origin).href;
 
       rw.on("title",{element(el){el.setInnerContent(title)}});
@@ -1843,24 +1843,24 @@ export default {
 
     if(routeType==="category"&&routeData){
       const c=routeData.category;
-      const description=c.description||`Practical ${c.name} RV troubleshooting and maintenance guides.`;
+      const description=c.description||`Practical ${c.name} septic maintenance and troubleshooting guides.`;
       const canonical=new URL(clean,url.origin).href;
-      rw.on("title",{element(el){el.setInnerContent(`${c.name} RV Guides | SepticBeacon`)}});
+      rw.on("title",{element(el){el.setInnerContent(`${c.name} Septic Guides | SepticBeacon`)}});
       rw.on('meta[name="description"]',{element(el){el.setAttribute("content",description)}});
       rw.on('link[rel="canonical"]',{element(el){el.setAttribute("href",canonical)}});
       rw.on("head",{element(el){
         const schema={"@context":"https://schema.org","@graph":[
-          {"@type":"CollectionPage","name":c.name+" RV Guides","description":description,"url":canonical},
+          {"@type":"CollectionPage","name":c.name+" Septic Guides","description":description,"url":canonical},
           {"@type":"BreadcrumbList","itemListElement":[
             {"@type":"ListItem","position":1,"name":"Home","item":url.origin+"/"},
-            {"@type":"ListItem","position":2,"name":"RV Systems","item":url.origin+"/#systems"},
+            {"@type":"ListItem","position":2,"name":"Septic Topics","item":url.origin+"/#systems"},
             {"@type":"ListItem","position":3,"name":c.name,"item":canonical}
           ]}
         ]};
         el.append(
           `<link rel="canonical" href="${escapeHtml(canonical)}">`+
           `<meta property="og:type" content="website">`+
-          `<meta property="og:title" content="${escapeHtml(c.name)} RV Guides | SepticBeacon">`+
+          `<meta property="og:title" content="${escapeHtml(c.name)} Septic Guides | SepticBeacon">`+
           `<meta property="og:description" content="${escapeHtml(description)}">`+
           `<meta property="og:url" content="${escapeHtml(canonical)}">`+
           `<meta name="twitter:card" content="summary">`+
@@ -1893,7 +1893,7 @@ export default {
         ]};
         el.append(
           `<link rel="canonical" href="${escapeHtml(canonical)}">`+
-          `<meta property="og:type" content="website"><meta property="og:title" content="SepticBeacon Blog | RV Repair & Maintenance Guides"><meta property="og:description" content="Practical RV troubleshooting, maintenance and ownership guides built around real symptoms and RV systems."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
+          `<meta property="og:type" content="website"><meta property="og:title" content="SepticBeacon Blog | RV Repair & Maintenance Guides"><meta property="og:description" content="Practical RV troubleshooting, maintenance and ownership guides built around real symptoms and septic systems."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
           `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g,"\\u003c")}</script>`,
           {html:true}
         );
