@@ -146,7 +146,7 @@ function renderArticles(rows){
     <td>${esc(a.content_type)}</td><td>${esc(a.categories?.name||"—")}</td>
     <td><span class="status ${a.status==="draft"?"draft":a.status==="published"?"":"review"}">${statusLabel(a.status)}</span>${a.status==="scheduled"&&a.scheduled_at?`<br><span class="subtle">${esc(formatSiteDateTime(a.scheduled_at))}</span>`:""}</td>
     <td><div class="admin-actions"><a class="btn" href="${ADMIN_BASE}/quick-entry?id=${a.id}">Edit</a>
-    ${a.status==="published"?`<a class="btn" href="/${esc(a.categories?.slug||"guides")}/${esc(a.slug)}" target="_blank" rel="noopener">View</a><button class="btn" data-unpublish="${a.id}">Unpublish</button>`:`<button class="btn primary" data-publish="${a.id}">Publish</button>`}
+    ${a.status==="published"?`<a class="btn" href="/blog/${esc(a.slug)}" target="_blank" rel="noopener">View</a><button class="btn" data-unpublish="${a.id}">Unpublish</button>`:`<button class="btn primary" data-publish="${a.id}">Publish</button>`}
     <button class="btn" data-archive="${a.id}">Archive</button></div></td>
     <td>${new Date(a.updated_at).toLocaleDateString()}</td></tr>`).join("")||'<tr><td colspan="6">Henüz içerik yok.</td></tr>';
   body.onclick=articleAction;
