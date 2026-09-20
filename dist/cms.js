@@ -146,7 +146,7 @@ function renderArticles(rows){
     <td>${esc(a.content_type)}</td><td>${esc(a.categories?.name||"—")}</td>
     <td><span class="status ${a.status==="draft"?"draft":a.status==="published"?"":"review"}">${statusLabel(a.status)}</span>${a.status==="scheduled"&&a.scheduled_at?`<br><span class="subtle">${esc(formatSiteDateTime(a.scheduled_at))}</span>`:""}</td>
     <td><div class="admin-actions"><a class="btn" href="${ADMIN_BASE}/quick-entry?id=${a.id}">Edit</a>
-    ${a.status==="published"?`<a class="btn" href="/${esc(a.categories?.slug||"guides")}/${esc(a.slug)}" target="_blank" rel="noopener">View</a><button class="btn" data-unpublish="${a.id}">Unpublish</button>`:`<button class="btn primary" data-publish="${a.id}">Publish</button>`}
+    ${a.status==="published"?`<a class="btn" href="/blog/${esc(a.slug)}" target="_blank" rel="noopener">View</a><button class="btn" data-unpublish="${a.id}">Unpublish</button>`:`<button class="btn primary" data-publish="${a.id}">Publish</button>`}
     <button class="btn" data-archive="${a.id}">Archive</button></div></td>
     <td>${new Date(a.updated_at).toLocaleDateString()}</td></tr>`).join("")||'<tr><td colspan="6">Henüz içerik yok.</td></tr>';
   body.onclick=articleAction;
@@ -157,7 +157,7 @@ async function articleAction(e){
     if(pub){
       pub.disabled=true;
       const id=pub.dataset.publish;
-      await api(`/rest/v1/articles?id=eq.${id}`,{method:"PATCH",body:JSON.stringify({status:"published",published_at:new Date().toISOString(),updated_by:currentUser.id})});
+      await api("/rest/v1/rpc/advance_article_status",{method:"POST",body:JSON.stringify({p_article_id:id,p_target:"published"})});
       return loadArticles();
     }
     if(unpub){
@@ -357,12 +357,12 @@ async function initEditor(){
   $("#canonical_path")?.addEventListener("input",()=>{canonicalTouched=true;updateUI()});
   $("#title")?.addEventListener("input",e=>{
     if(!slugTouched)$("#slug").value=slugify(e.target.value);
-    if(!canonicalTouched)$("#canonical_path").value=`/${categorySlug()}/${$("#slug").value}/`;
+    if(!canonicalTouched)$("#canonical_path").value=`/blog/${$("#slug").value}`;
     if(!$("#seo_title").dataset.touched)$("#seo_title").value=e.target.value.slice(0,70);
     updateUI();
   });
   $("#category_id")?.addEventListener("change",()=>{
-    if(!canonicalTouched)$("#canonical_path").value=`/${categorySlug()}/${$("#slug").value}/`;
+    if(!canonicalTouched)$("#canonical_path").value=`/blog/${$("#slug").value}`;
     updateUI();
   });
   $("#seo_title")?.addEventListener("input",e=>{e.target.dataset.touched="1"});
@@ -532,7 +532,7 @@ async function initEditor(){
     }
     if(!ui.slug){
       form.slug.value=slugify(ui.title);
-      if(!canonicalTouched)form.canonical_path.value=`/${categorySlug()}/${form.slug.value}/`;
+      if(!canonicalTouched)form.canonical_path.value=`/blog/${form.slug.value}`;
     }
 
     b.disabled=true;
@@ -585,12 +585,11 @@ async function initEditor(){
       }
 
       if(action==="publish"){
-        const publishedAt=originalPublishedAt||new Date().toISOString();
-        await api(`/rest/v1/articles?id=eq.${id}&site_id=eq.${s.id}`,{
-          method:"PATCH",
-          body:JSON.stringify({status:"published",published_at:publishedAt,scheduled_at:null,updated_by:currentUser.id})
+        await api("/rest/v1/rpc/advance_article_status",{
+          method:"POST",
+          body:JSON.stringify({p_article_id:id,p_target:"published"})
         });
-        originalStatus="published";originalPublishedAt=publishedAt;
+        originalStatus="published";originalPublishedAt=originalPublishedAt||new Date().toISOString();
         $("#save-draft").textContent="Save Changes";
         message.textContent="İçerik yayınlandı.";
       }else if(action==="schedule"){
