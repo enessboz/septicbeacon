@@ -1,4 +1,4 @@
-// RVFixWise MCP media helpers.
+// SepticBeacon MCP media helpers.
 // Imports public HTTPS images into the existing R2 media library.
 
 function serviceHeaders(env, extra = {}) {
@@ -9,10 +9,10 @@ function serviceHeaders(env, extra = {}) {
 }
 
 async function siteId(env) {
-  const r = await fetch(env.SUPABASE_URL + "/rest/v1/sites?domain=eq.rvfixwise.com&select=id&limit=1", { headers: serviceHeaders(env) });
+  const r = await fetch(env.SUPABASE_URL + "/rest/v1/sites?domain=eq.septicbeacon.com&select=id&limit=1", { headers: serviceHeaders(env) });
   if (!r.ok) throw new Error(await r.text());
   const row = (await r.json())[0];
-  if (!row?.id) throw new Error("RVFixWise site record not found.");
+  if (!row?.id) throw new Error("SepticBeacon site record not found.");
   return row.id;
 }
 
@@ -63,8 +63,8 @@ function safeAlt(value) {
 export const MEDIA_TOOLS = [
   {
     name: "generate_article_image",
-    title: "Generate RVFixWise article image",
-    description: "Generate an RV-related image with Cloudflare Workers AI, store it in RVFixWise R2 media, and attach it as a featured or inline article image.",
+    title: "Generate SepticBeacon article image",
+    description: "Generate an RV-related image with Cloudflare Workers AI, store it in SepticBeacon R2 media, and attach it as a featured or inline article image.",
     inputSchema: {
       type: "object",
       required: ["article_id", "prompt", "alt_text", "placement"],
@@ -83,8 +83,8 @@ export const MEDIA_TOOLS = [
   },
   {
     name: "import_media_from_url",
-    title: "Import image to RVFixWise media",
-    description: "Download a public HTTPS WebP, PNG, or JPEG image into RVFixWise R2 media storage and optionally associate it with an article.",
+    title: "Import image to SepticBeacon media",
+    description: "Download a public HTTPS WebP, PNG, or JPEG image into SepticBeacon R2 media storage and optionally associate it with an article.",
     inputSchema: {
       type: "object",
       required: ["image_url", "alt_text"],
@@ -101,8 +101,8 @@ export const MEDIA_TOOLS = [
   },
   {
     name: "add_article_image",
-    title: "Add image to RVFixWise article",
-    description: "Import a public HTTPS image into RVFixWise R2 and use it as the featured image or insert it into article markdown.",
+    title: "Add image to SepticBeacon article",
+    description: "Import a public HTTPS image into SepticBeacon R2 and use it as the featured image or insert it into article markdown.",
     inputSchema: {
       type: "object",
       required: ["article_id", "image_url", "alt_text", "placement"],
@@ -133,7 +133,7 @@ export async function importMediaFromUrl(env, args = {}) {
 
   const response = await fetch(remote.toString(), {
     redirect: "follow",
-    headers: { "User-Agent": "RVFixWise-Media-Importer/1.0", "Accept": "image/webp,image/png,image/jpeg" }
+    headers: { "User-Agent": "SepticBeacon-Media-Importer/1.0", "Accept": "image/webp,image/png,image/jpeg" }
   });
   if (!response.ok) throw new Error("Image download failed with HTTP " + response.status + ".");
 
