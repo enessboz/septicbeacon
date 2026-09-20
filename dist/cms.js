@@ -830,11 +830,20 @@ async function initMediaLibrary(){
   }
 
   async function upload(){
-    const file=$("#media-library-file")?.files?.[0],btn=$("#media-library-upload");
-    btn.disabled=true;status.textContent="Sıkıştırılıyor ve WebP olarak yükleniyor…";status.className="cms-message";
+    const files=Array.from($("#media-library-file")?.files||[]),btn=$("#media-library-upload");
+    if(!files.length){status.textContent="Önce en az bir görsel seç.";status.className="cms-message error";return}
+    btn.disabled=true;status.textContent=`${files.length} görsel sıkıştırılıyor ve WebP olarak yükleniyor…`;status.className="cms-message";
     try{
-      const m=await uploadMediaFile(file,{alt:$("#media-library-alt").value.trim(),caption:$("#media-library-caption").value.trim()});
-      status.textContent=`Yüklendi. ${mediaSavings(m)}`;
+      const sharedAlt=$("#media-library-alt").value.trim();
+      const caption=$("#media-library-caption").value.trim();
+      const uploaded=[];
+      for(let i=0;i<files.length;i++){
+        const file=files[i];
+        status.textContent=`${i+1}/${files.length} · ${file.name} işleniyor…`;
+        const derivedAlt=String(file.name||"septic system image").replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").replace(/\s+/g," ").trim();
+        uploaded.push(await uploadMediaFile(file,{alt:files.length===1&&sharedAlt?sharedAlt:derivedAlt,caption}));
+      }
+      status.textContent=`${uploaded.length} görsel yüklendi. Media Library hazır.`;
       status.className="cms-message success";
       $("#media-library-file").value="";$("#media-library-alt").value="";$("#media-library-caption").value="";
       await load();
@@ -849,9 +858,9 @@ async function initMediaLibrary(){
   ["dragenter","dragover"].forEach(ev=>dz?.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("is-dragging")}));
   ["dragleave","drop"].forEach(ev=>dz?.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("is-dragging")}));
   dz?.addEventListener("drop",e=>{
-    const f=e.dataTransfer?.files?.[0];
-    if(f){
-      const dt=new DataTransfer();dt.items.add(f);$("#media-library-file").files=dt.files;
+    const files=Array.from(e.dataTransfer?.files||[]).filter(f=>/^image\//.test(f.type));
+    if(files.length){
+      const dt=new DataTransfer();files.forEach(f=>dt.items.add(f));$("#media-library-file").files=dt.files;
     }
   });
 
