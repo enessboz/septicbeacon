@@ -1,5 +1,5 @@
-const SUPABASE_URL="https://jyqngstekzvurbirangl.supabase.co";
-const ANON_KEY=window.SEPTICBEACON_SUPABASE_ANON_KEY||"sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
+const SUPABASE_URL="https://dkpsiwytmvgylqhbntmg.supabase.co";
+const ANON_KEY=window.SEPTICBEACON_SUPABASE_ANON_KEY||"sb_publishable_AvR-71NF4xi_KdBZc-gSAg_mN8Cq8rl";
 const $=(s,r=document)=>r.querySelector(s), token=()=>localStorage.getItem("sb_access_token"), refreshToken=()=>localStorage.getItem("sb_refresh_token");
 const ADMIN_BASE="/sb-control-8n4k";
 const loginPath=location.pathname===ADMIN_BASE+"/login";
@@ -74,7 +74,52 @@ async function requireAuth(){if(!token()&&!(await renew())){location.replace(ADM
 function adminTools(){const a=$(".admin-actions");if(!a||$("#rvf-logout"))return;const role=document.createElement("span");role.className="subtle";role.textContent=currentUser.cmsRole;const b=document.createElement("button");b.id="rvf-logout";b.className="btn";b.type="button";b.textContent="Logout";b.onclick=async()=>{try{await api("/auth/v1/logout",{method:"POST"})}catch{}clearSession();location.replace(ADMIN_BASE+"/login")};a.prepend(role,b)}
 const authReady=adminPath?requireAuth().catch(()=>{clearSession();location.replace(ADMIN_BASE+"/login");return false}):Promise.resolve(true);
 
-if(loginPath){document.documentElement.style.visibility="visible";if(token())location.replace(ADMIN_BASE);$("#login")?.addEventListener("submit",async e=>{e.preventDefault();$("#message").textContent="Signing in…";try{const s=await api("/auth/v1/token?grant_type=password",{method:"POST",auth:false,body:JSON.stringify({email:$("#email").value,password:$("#password").value})});saveSession(s);location.replace(ADMIN_BASE)}catch{$("#message").textContent="Sign in failed. Check your email and password."}})}
+if(loginPath){
+  document.documentElement.style.visibility="visible";
+  if(token())location.replace(ADMIN_BASE);
+
+  $("#login")?.addEventListener("submit",async e=>{
+    e.preventDefault();
+    $("#message").textContent="Signing in…";
+    try{
+      const s=await api("/auth/v1/token?grant_type=password",{
+        method:"POST",auth:false,
+        body:JSON.stringify({email:$("#email").value.trim(),password:$("#password").value})
+      });
+      saveSession(s);
+      location.replace(ADMIN_BASE);
+    }catch(err){
+      $("#message").textContent="Sign in failed. Check your email and password.";
+    }
+  });
+
+  $("#signup")?.addEventListener("click",async ()=>{
+    const email=$("#email").value.trim();
+    const password=$("#password").value;
+    if(!email||!password||password.length<8){
+      $("#message").textContent="Enter your email and a password with at least 8 characters.";
+      return;
+    }
+    $("#signup").disabled=true;
+    $("#message").textContent="Creating your SepticBeacon admin account…";
+    try{
+      const s=await api("/auth/v1/signup",{
+        method:"POST",auth:false,
+        body:JSON.stringify({email,password,data:{name:"SepticBeacon Owner"}})
+      });
+      if(s?.access_token&&s?.refresh_token){
+        saveSession(s);
+        location.replace(ADMIN_BASE);
+        return;
+      }
+      $("#message").textContent="Account created. Check your email to confirm it, then return here and sign in.";
+    }catch(err){
+      $("#message").textContent=err.message||"Account creation failed.";
+    }finally{
+      $("#signup").disabled=false;
+    }
+  });
+}
 async function site(){const r=await api("/rest/v1/sites?domain=eq.septicbeacon.com&select=id,name,timezone");if(!r.length)throw new Error("Site record not found");currentSiteTimezone=r[0].timezone||"America/New_York";return r[0]}
 const statusLabel=s=>({draft:"Draft",editorial_qa:"Editorial QA",technical_review:"Technical Review",ready:"Ready",scheduled:"Scheduled",published:"Published",refresh:"Refresh",archived:"Archived"}[s]||s);
 const nextStatus=a=>a.status==="published"?"draft":"published";
