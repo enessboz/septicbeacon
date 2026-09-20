@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "rvfixwise",
+  "name": "septicbeacon",
   "main": "worker.js",
   "compatibility_date": "2026-09-17",
   "assets": {
@@ -21,7 +21,7 @@
   "r2_buckets": [
     {
       "binding": "MEDIA_BUCKET",
-      "bucket_name": "rvfixwise-media"
+      "bucket_name": "septicbeacon-media"
     }
   ],
   "triggers": {
