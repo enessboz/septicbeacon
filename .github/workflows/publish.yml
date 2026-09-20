@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - "posts/*.json"
+      - "assets/**"
       - "publisher.py"
       - ".github/workflows/publish.yml"
 
@@ -25,7 +26,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       WP_SITE_URL: https://septicbeacon.com
       WP_USERNAME: ${{ secrets.WP_USERNAME }}
