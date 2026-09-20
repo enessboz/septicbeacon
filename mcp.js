@@ -1,5 +1,5 @@
 import { MEDIA_TOOLS, importMediaFromUrl, addArticleImage, generateArticleImage } from "./mcp-media.js";
-// RVFixWise remote MCP server (stateless HTTP)
+// SepticBeacon remote MCP server (stateless HTTP)
 // Supports current MCP 2026-07-28 requests and the common 2025 initialize/tools flow.
 // Authentication: OAuth 2.1 access token (Claude) or direct Bearer MCP_API_KEY for admin testing.
 
@@ -10,22 +10,22 @@ const TOOLS = [
   ...MEDIA_TOOLS,
   {
     name: "site_status",
-    title: "RVFixWise site status",
-    description: "Check that the RVFixWise MCP server can reach the CMS database and return basic content counts.",
+    title: "SepticBeacon site status",
+    description: "Check that the SepticBeacon MCP server can reach the CMS database and return basic content counts.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "list_categories",
-    title: "List RVFixWise categories",
-    description: "List active RVFixWise content categories with their IDs, names and slugs.",
+    title: "List SepticBeacon categories",
+    description: "List active SepticBeacon content categories with their IDs, names and slugs.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "list_articles",
-    title: "List RVFixWise articles",
-    description: "List RVFixWise articles. Optionally filter by workflow status.",
+    title: "List SepticBeacon articles",
+    description: "List SepticBeacon articles. Optionally filter by workflow status.",
     inputSchema: {
       type: "object",
       properties: {
@@ -38,8 +38,8 @@ const TOOLS = [
   },
   {
     name: "get_article",
-    title: "Get an RVFixWise article",
-    description: "Get one RVFixWise article by id or slug, including markdown, SEO fields and workflow status.",
+    title: "Get an SepticBeacon article",
+    description: "Get one SepticBeacon article by id or slug, including markdown, SEO fields and workflow status.",
     inputSchema: {
       type: "object",
       properties: {
@@ -53,8 +53,8 @@ const TOOLS = [
   },
   {
     name: "create_article",
-    title: "Create RVFixWise draft",
-    description: "Create a new RVFixWise article as a draft. This never publishes automatically.",
+    title: "Create SepticBeacon draft",
+    description: "Create a new SepticBeacon article as a draft. This never publishes automatically.",
     inputSchema: {
       type: "object",
       required: ["title","category_slug","primary_keyword","search_intent","seo_title","meta_description","content_markdown"],
@@ -82,8 +82,8 @@ const TOOLS = [
   },
   {
     name: "update_article",
-    title: "Update RVFixWise article",
-    description: "Update editable RVFixWise article fields without changing its workflow status.",
+    title: "Update SepticBeacon article",
+    description: "Update editable SepticBeacon article fields without changing its workflow status.",
     inputSchema: {
       type: "object",
       required: ["id","changes"],
@@ -118,7 +118,7 @@ const TOOLS = [
   },
   {
     name: "set_article_relations",
-    title: "Set RVFixWise article sources and internal links",
+    title: "Set SepticBeacon article sources and internal links",
     description: "Replace an article's source references and registered internal links used by the publish gate.",
     inputSchema: {
       type: "object",
@@ -157,8 +157,8 @@ const TOOLS = [
   },
   {
     name: "schedule_article",
-    title: "Schedule RVFixWise article",
-    description: "Schedule an article for publishing. The existing RVFixWise publish gate must pass before scheduling, and the existing Cloudflare cron performs the publication.",
+    title: "Schedule SepticBeacon article",
+    description: "Schedule an article for publishing. The existing SepticBeacon publish gate must pass before scheduling, and the existing Cloudflare cron performs the publication.",
     inputSchema: {
       type: "object",
       required: ["id","scheduled_at"],
@@ -172,8 +172,8 @@ const TOOLS = [
   },
   {
     name: "publish_article",
-    title: "Publish RVFixWise article",
-    description: "Explicitly publish an article now only when the RVFixWise publish gate passes. Use only when the user specifically requests publication.",
+    title: "Publish SepticBeacon article",
+    description: "Explicitly publish an article now only when the SepticBeacon publish gate passes. Use only when the user specifically requests publication.",
     inputSchema: {
       type: "object",
       required: ["id"],
@@ -218,8 +218,8 @@ function toolResult(value, isError=false) {
 }
 
 
-const OAUTH_ISSUER = "https://rvfixwise.com";
-const OAUTH_RESOURCE = "https://rvfixwise.com/mcp";
+const OAUTH_ISSUER = "https://septicbeacon.com";
+const OAUTH_RESOURCE = "https://septicbeacon.com/mcp";
 
 function b64urlEncodeBytes(bytes){
   let binary="";
@@ -337,12 +337,12 @@ async function oauthAuthorize(request,env){
   if(responseType!=="code")return oauthError("unsupported_response_type","Only authorization code flow is supported.");
   if(!client.redirect_uris?.includes(redirectUri)||!allowedRedirect(redirectUri))return oauthError("invalid_request","redirect_uri is not registered for this client.");
   if(!codeChallenge||codeMethod!=="S256")return oauthError("invalid_request","PKCE S256 is required.");
-  if(resource!==OAUTH_RESOURCE)return oauthError("invalid_target","This authorization server only grants access to the RVFixWise MCP resource.");
+  if(resource!==OAUTH_RESOURCE)return oauthError("invalid_target","This authorization server only grants access to the SepticBeacon MCP resource.");
 
   if(request.method==="GET"){
     const hidden=[["client_id",clientId],["redirect_uri",redirectUri],["response_type",responseType],["state",state],["code_challenge",codeChallenge],["code_challenge_method",codeMethod],["scope",scope],["resource",resource]]
       .map(([k,v])=>`<input type="hidden" name="${k}" value="${htmlEscape(v)}">`).join("");
-    const html=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connect RVFixWise</title><style>body{font-family:Inter,system-ui,sans-serif;background:#0f172a;color:#e2e8f0;display:grid;place-items:center;min-height:100vh;margin:0}.card{width:min(460px,calc(100vw - 40px));background:#111827;border:1px solid #334155;border-radius:18px;padding:28px;box-shadow:0 24px 70px #0008}h1{margin:0 0 8px;font-size:24px}p{color:#94a3b8;line-height:1.5}label{display:block;margin:22px 0 8px;font-weight:650}input[type=password]{width:100%;box-sizing:border-box;border:1px solid #475569;background:#020617;color:#fff;border-radius:10px;padding:12px 14px;font-size:15px}button{width:100%;margin-top:16px;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:#f59e0b;color:#111827}.small{font-size:12px}</style></head><body><form class="card" method="post" action="/oauth/authorize"><h1>Connect RVFixWise to Claude</h1><p>Claude is requesting access to your RVFixWise CMS connector. Enter the same secret value you saved in Cloudflare as <strong>MCP_API_KEY</strong>.</p>${hidden}<label for="connector_key">Connector key</label><input id="connector_key" name="connector_key" type="password" autocomplete="off" required><button type="submit">Authorize Claude</button><p class="small">The key is verified by RVFixWise and is not sent to Claude.</p></form></body></html>`;
+    const html=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connect SepticBeacon</title><style>body{font-family:Inter,system-ui,sans-serif;background:#0f172a;color:#e2e8f0;display:grid;place-items:center;min-height:100vh;margin:0}.card{width:min(460px,calc(100vw - 40px));background:#111827;border:1px solid #334155;border-radius:18px;padding:28px;box-shadow:0 24px 70px #0008}h1{margin:0 0 8px;font-size:24px}p{color:#94a3b8;line-height:1.5}label{display:block;margin:22px 0 8px;font-weight:650}input[type=password]{width:100%;box-sizing:border-box;border:1px solid #475569;background:#020617;color:#fff;border-radius:10px;padding:12px 14px;font-size:15px}button{width:100%;margin-top:16px;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;background:#f59e0b;color:#111827}.small{font-size:12px}</style></head><body><form class="card" method="post" action="/oauth/authorize"><h1>Connect SepticBeacon to Claude</h1><p>Claude is requesting access to your SepticBeacon CMS connector. Enter the same secret value you saved in Cloudflare as <strong>MCP_API_KEY</strong>.</p>${hidden}<label for="connector_key">Connector key</label><input id="connector_key" name="connector_key" type="password" autocomplete="off" required><button type="submit">Authorize Claude</button><p class="small">The key is verified by SepticBeacon and is not sent to Claude.</p></form></body></html>`;
     return new Response(html,{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","X-Frame-Options":"DENY"}});
   }
 
@@ -418,10 +418,10 @@ function serviceHeaders(env, extra={}) {
 
 async function siteId(env) {
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase service credentials are not configured.");
-  const r = await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.rvfixwise.com&select=id&limit=1`, { headers: serviceHeaders(env) });
+  const r = await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.septicbeacon.com&select=id&limit=1`, { headers: serviceHeaders(env) });
   if (!r.ok) throw new Error(await r.text());
   const row = (await r.json())[0];
-  if (!row?.id) throw new Error("RVFixWise site record not found.");
+  if (!row?.id) throw new Error("SepticBeacon site record not found.");
   return row.id;
 }
 
@@ -730,7 +730,7 @@ async function siteStatus(env) {
   for (const a of articles) counts[a.status] = (counts[a.status] || 0) + 1;
   return {
     ok: true,
-    site: "rvfixwise.com",
+    site: "septicbeacon.com",
     protocol: PROTOCOL_VERSION,
     article_count: articles.length,
     article_statuses: counts,
@@ -759,7 +759,7 @@ async function callTool(env, name, args) {
 function discoverResult() {
   return {
     protocolVersion: PROTOCOL_VERSION,
-    serverInfo: { name: "rvfixwise", title: "RVFixWise CMS", version: "1.0.0" },
+    serverInfo: { name: "septicbeacon", title: "SepticBeacon CMS", version: "1.0.0" },
     capabilities: { tools: {} }
   };
 }
@@ -772,7 +772,7 @@ export async function handleMcp(request, env) {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
-        ...(auth.status === 401 ? { "WWW-Authenticate": 'Bearer realm="rvfixwise-mcp", resource_metadata="https://rvfixwise.com/.well-known/oauth-protected-resource"' } : {})
+        ...(auth.status === 401 ? { "WWW-Authenticate": 'Bearer realm="septicbeacon-mcp", resource_metadata="https://septicbeacon.com/.well-known/oauth-protected-resource"' } : {})
       }
     });
   }
@@ -797,7 +797,7 @@ export async function handleMcp(request, env) {
       return jsonRpc(id, {
         protocolVersion: body?.params?.protocolVersion || LEGACY_PROTOCOL_VERSION,
         capabilities: { tools: {} },
-        serverInfo: { name: "rvfixwise", title: "RVFixWise CMS", version: "1.0.0" }
+        serverInfo: { name: "septicbeacon", title: "SepticBeacon CMS", version: "1.0.0" }
       });
     }
     if (method === "notifications/initialized") return new Response(null, { status: 202 });
