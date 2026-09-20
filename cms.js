@@ -339,7 +339,7 @@ async function compressToWebp(file,{maxDimension=2000,quality=.82}={}){
 
 async function uploadMediaFile(file,{alt="",caption="",articleId=null}={}){
   const prepared=await compressToWebp(file);
-  const name=String(file.name||"rv-image").replace(/\.[^.]+$/,"");
+  const name=String(file.name||"septic-image").replace(/\.[^.]+$/,"");
   const params=new URLSearchParams({
     name,
     alt,
@@ -620,7 +620,7 @@ async function initEditor(){
       if(!form.featured_image_alt.value)form.featured_image_alt.value=m.alt_text||"";
       syncFeaturedPreview();
     }else{
-      const alt=m.alt_text||"RV image";
+      const alt=m.alt_text||"Septic system image";
       const caption=m.caption?` "${m.caption.replace(/"/g,"'")}"`:"";
       insertAtCursor(form.content_markdown,`![${alt}](${m.public_url}${caption})`);
     }
@@ -651,7 +651,7 @@ async function initEditor(){
     const file=$("#article_image_file")?.files?.[0],btn=$("#upload-article-image");
     btn.disabled=true;articleImageStatus.textContent="Sıkıştırılıyor ve içeriğe hazırlanıyor…";articleImageStatus.className="cms-message";
     try{
-      const alt=$("#article_image_alt").value.trim()||"RV image";
+      const alt=$("#article_image_alt").value.trim()||"Septic system image";
       const caption=$("#article_image_caption").value.trim();
       const m=await uploadMediaFile(file,{alt,caption,articleId:id});
       const cap=caption?` "${caption.replace(/"/g,"'")}"`:"";
@@ -667,7 +667,7 @@ async function initEditor(){
   $("#generate-featured-image")?.addEventListener("click",async e=>{
     const btn=e.currentTarget;
     if(!id){featuredStatus.textContent="Save the draft once before generating an image.";featuredStatus.className="cms-message error";return}
-    const prompt=form.featured_image_prompt.value.trim()||`${form.title.value.trim()} — realistic RV repair editorial photograph`;
+    const prompt=form.featured_image_prompt.value.trim()||`${form.title.value.trim()} — realistic septic system homeowner editorial photograph`;
     const alt=form.featured_image_alt.value.trim()||form.title.value.trim();
     if(!prompt||!alt){featuredStatus.textContent="Add an article title or image brief first.";featuredStatus.className="cms-message error";return}
     btn.disabled=true;featuredStatus.textContent="Generating image with Workers AI…";featuredStatus.className="cms-message";
@@ -888,7 +888,7 @@ async function publicArticle(){
 
     main.innerHTML=`<section class="section article-page-live"><div class="wrap article-layout"><article class="article-body">
       <div class="breadcrumb"><a href="/">Home</a> / <a href="/category/${esc(a.categories?.slug||"guides")}">${esc(a.categories?.name||"Guides")}</a></div>
-      <span class="badge">${esc(a.categories?.name||"RV Guide")}</span><h1>${esc(a.title)}</h1>
+      <span class="badge">${esc(a.categories?.name||"Septic Guide")}</span><h1>${esc(a.title)}</h1>
       ${a.excerpt?`<p class="lead">${esc(a.excerpt)}</p>`:""}
       ${a.featured_image_url?`<figure class="featured-figure"><img class="live-featured-image" src="${esc(a.featured_image_url)}" alt="${esc(a.featured_image_alt||a.title)}"></figure>`:""}
       ${md(a.content_markdown)}
@@ -898,7 +898,7 @@ async function publicArticle(){
     main.innerHTML=`<section class="section"><div class="wrap"><div class="no-results"><h1>Article could not be loaded</h1><p>${esc(err.message)}</p></div></div></section>`;
   }
 }
-async function publicCategory(){if(!location.pathname.startsWith("/category/"))return;const main=$("main");if(main?.dataset.serverRendered==="1")return;const slug=new URLSearchParams(location.search).get("slug")||location.pathname.split("/").filter(Boolean).pop();const cats=await api(`/rest/v1/categories?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=id,name,slug`,{auth:false});if(!cats.length){location.replace("/404.html");return}const c=cats[0],articles=await api(`/rest/v1/articles?category_id=eq.${c.id}&status=eq.published&select=title,slug,excerpt,content_type,published_at&order=published_at.desc`,{auth:false});document.title=`${c.name} RV Guides | SepticBeacon`;$('main').innerHTML=`<section class="category-hero"><div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / RV Systems / ${esc(c.name)}</div><div class="category-hero-card"><div><div class="kicker"><span class="dot"></span> ${esc(c.name)}</div><h1>${esc(c.name)} RV repair guides</h1><p>Practical troubleshooting and maintenance guidance.</p></div><div class="category-stats"><div class="category-stat"><b>${articles.length}</b><span>Published guides</span></div></div></div></div></section><section class="section"><div class="wrap"><div class="guide-grid">${articles.map(a=>`<a class="guide-card" href="/${c.slug}/${a.slug}"><div class="thumb"></div><div class="article-copy"><div class="meta"><span class="badge">${esc(a.content_type)}</span></div><h3>${esc(a.title)}</h3><p>${esc(a.excerpt||"Open this practical RV guide.")}</p></div></a>`).join("")||"<p>No published guides yet.</p>"}</div></div></section>`}
+async function publicCategory(){if(!location.pathname.startsWith("/category/"))return;const main=$("main");if(main?.dataset.serverRendered==="1")return;const slug=new URLSearchParams(location.search).get("slug")||location.pathname.split("/").filter(Boolean).pop();const cats=await api(`/rest/v1/categories?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=id,name,slug`,{auth:false});if(!cats.length){location.replace("/404.html");return}const c=cats[0],articles=await api(`/rest/v1/articles?category_id=eq.${c.id}&status=eq.published&select=title,slug,excerpt,content_type,published_at&order=published_at.desc`,{auth:false});document.title=`${c.name} Septic Guides | SepticBeacon`;$('main').innerHTML=`<section class="category-hero"><div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / RV Systems / ${esc(c.name)}</div><div class="category-hero-card"><div><div class="kicker"><span class="dot"></span> ${esc(c.name)}</div><h1>${esc(c.name)} RV repair guides</h1><p>Practical troubleshooting and maintenance guidance.</p></div><div class="category-stats"><div class="category-stat"><b>${articles.length}</b><span>Published guides</span></div></div></div></div></section><section class="section"><div class="wrap"><div class="guide-grid">${articles.map(a=>`<a class="guide-card" href="/${c.slug}/${a.slug}"><div class="thumb"></div><div class="article-copy"><div class="meta"><span class="badge">${esc(a.content_type)}</span></div><h3>${esc(a.title)}</h3><p>${esc(a.excerpt||"Open this practical RV guide.")}</p></div></a>`).join("")||"<p>No published guides yet.</p>"}</div></div></section>`}
 
 
 async function publicHome(){
@@ -921,7 +921,7 @@ async function publicHome(){
     api("/rest/v1/articles?status=eq.published&select=id,title,slug,excerpt,content_type,published_at,categories(name,slug)&order=published_at.desc&limit=12",{auth:false})
   ]);
   const cg=$("#live-home-categories");
-  if(cg)cg.innerHTML=cats.map(c=>`<a class="topic topic-vector" href="/category/${esc(c.slug)}"><div class="topic-copy"><h3>${esc(c.name)}</h3><p>${esc(c.description||"RV repair and maintenance guides.")}</p></div><span class="topic-arrow" aria-hidden="true">→</span></a>`).join("")||'<p class="subtle">Henüz kategori yok.</p>';
+  if(cg)cg.innerHTML=cats.map(c=>`<a class="topic topic-vector" href="/category/${esc(c.slug)}"><div class="topic-copy"><h3>${esc(c.name)}</h3><p>${esc(c.description||"Septic maintenance and troubleshooting guides.")}</p></div><span class="topic-arrow" aria-hidden="true">→</span></a>`).join("")||'<p class="subtle">Henüz kategori yok.</p>';
   const ag=$("#live-home-articles");
   if(ag)ag.innerHTML=articles.slice(0,6).map(a=>`<a class="article-card" href="/blog/${esc(a.slug)}"><div class="thumb"></div><div class="article-copy"><div class="meta"><span class="badge">${esc(a.categories?.name||"Guide")}</span><span>${a.published_at?new Date(a.published_at).toLocaleDateString("en-US",{month:"short",year:"numeric"}):""}</span></div><h3>${esc(a.title)}</h3><p>${esc(a.excerpt||"Open this RV guide.")}</p></div></a>`).join("")||'<p class="subtle">Henüz yayınlanmış içerik yok.</p>';
   const pg=$("#live-home-popular");
@@ -1046,7 +1046,7 @@ async function loadAdminView(){
             <label class="field"><span>Default meta description</span><textarea id="seo-default-description" rows="3">${esc(cfg.default_meta_description||"")}</textarea><small>Hard character limits are not enforced. Keep it useful and descriptive.</small></label>
             <div class="seo-toggle-grid">
               <label class="seo-toggle"><input id="seo-sitemap-enabled" type="checkbox" ${checked(cfg.sitemap_enabled)}><span><b>Dynamic sitemap</b><small>Published articles are generated automatically from Supabase.</small></span></label>
-              <label class="seo-toggle"><input id="seo-sitemap-categories" type="checkbox" ${checked(cfg.sitemap_include_categories)}><span><b>Include categories</b><small>Add active RV system category URLs to the sitemap.</small></span></label>
+              <label class="seo-toggle"><input id="seo-sitemap-categories" type="checkbox" ${checked(cfg.sitemap_include_categories)}><span><b>Include categories</b><small>Add active septic topic category URLs to the sitemap.</small></span></label>
               <label class="seo-toggle"><input id="seo-sitemap-static" type="checkbox" ${checked(cfg.sitemap_include_static)}><span><b>Include core pages</b><small>Home, Blog, About, Editorial Policy and How We Review.</small></span></label>
               <label class="seo-toggle"><input id="seo-robots-enabled" type="checkbox" ${checked(cfg.robots_enabled)}><span><b>robots.txt</b><small>Serve a live robots.txt generated by the Worker.</small></span></label>
               <label class="seo-toggle"><input id="seo-oai-enabled" type="checkbox" ${checked(cfg.allow_oai_searchbot)}><span><b>OAI SearchBot</b><small>Allow public content while keeping admin and API routes blocked.</small></span></label>
@@ -1221,7 +1221,7 @@ async function initMediaLibrary(){
     if(md){
       const m=rows.find(x=>x.id===md.dataset.copyMd);if(!m)return;
       const cap=m.caption?` "${String(m.caption).replace(/"/g,"'")}"`:"";
-      await navigator.clipboard.writeText(`![${m.alt_text||"RV image"}](${m.public_url}${cap})`);
+      await navigator.clipboard.writeText(`![${m.alt_text||"Septic system image"}](${m.public_url}${cap})`);
       md.textContent="Copied";setTimeout(()=>md.textContent="Markdown",900);return;
     }
     const edit=e.target.closest("[data-edit-media]");
