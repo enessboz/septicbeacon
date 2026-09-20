@@ -1145,10 +1145,11 @@ function homePopularHtml(articles){
 
 function embeddedDemoMedia(name){
   const uri=categoryImage(name,name);
-  const base64=String(uri).split(",")[1]||"";
-  if(!base64)return new Response("Not found",{status:404});
-  const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));
-  return new Response(bytes,{headers:{"Content-Type":"image/webp","Cache-Control":"public, max-age=31536000, immutable"}});
+  const comma=String(uri).indexOf(",");
+  if(comma<0)return new Response("Not found",{status:404});
+  const encoded=String(uri).slice(comma+1);
+  const svg=decodeURIComponent(encoded);
+  return new Response(svg,{headers:{"Content-Type":"image/svg+xml; charset=UTF-8","Cache-Control":"public, max-age=31536000, immutable"}});
 }
 
 function isTrustedOrigin(request){
