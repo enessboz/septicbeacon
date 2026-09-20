@@ -930,7 +930,7 @@ function articleHtml(a){
 
           <div class="article-end-note">
             <strong>SepticBeacon editorial note</strong>
-            <p>This guide is educational. Stop and use a qualified septic professional when a procedure involves unsafe electrical, propane, structural or pressurized-system work beyond your experience.</p>
+            <p>This guide is educational. Never enter a septic tank. Use a qualified septic professional for sewage exposure, electrical pump work, excavation, confined-space hazards or site-specific diagnosis beyond normal homeowner checks.</p>
           </div>
         </article>
 
@@ -1404,7 +1404,7 @@ async function sitemapResponse(request,env){
     publicApi(env,`/rest/v1/articles?site_id=eq.${siteId}&status=eq.published&select=slug,updated_at,published_at&order=updated_at.desc`)
   ]);
   const categories=results[0]||[],articles=results[1]||[];
-  const staticUrls=settings.sitemap_include_static===false?[]:["/","/blog","/about.html","/editorial-policy.html","/how-we-review.html"];
+  const staticUrls=settings.sitemap_include_static===false?[]:["/","/blog","/about.html","/contact.html","/privacy.html","/disclaimer.html","/editorial-policy.html","/how-we-review.html"];
   const urls=[
     ...staticUrls.map(path=>({loc:`${origin}${path}`})),
     ...(settings.sitemap_include_categories===false?[]:categories.map(c=>({loc:`${origin}/category/${c.slug}`}))),
@@ -1888,17 +1888,17 @@ export default {
         const canonical=new URL("/blog",url.origin).href;
         const list=(routeData.articles||[]).slice(0,20).map((a,i)=>({"@type":"ListItem","position":i+1,"url":new URL("/blog/"+a.slug,url.origin).href,"name":a.title}));
         const schema={"@context":"https://schema.org","@graph":[
-          {"@type":"Blog","@id":canonical+"#blog","name":"SepticBeacon Blog","description":"Practical RV troubleshooting, maintenance and ownership guides.","url":canonical,"publisher":{"@type":"Organization","name":"SepticBeacon","url":url.origin}},
+          {"@type":"Blog","@id":canonical+"#blog","name":"SepticBeacon Blog","description":"Practical septic maintenance, troubleshooting, cost and inspection guides for homeowners.","url":canonical,"publisher":{"@type":"Organization","name":"SepticBeacon","url":url.origin}},
           {"@type":"ItemList","@id":canonical+"#articles","itemListElement":list}
         ]};
         el.append(
           `<link rel="canonical" href="${escapeHtml(canonical)}">`+
-          `<meta property="og:type" content="website"><meta property="og:title" content="SepticBeacon Blog | RV Repair & Maintenance Guides"><meta property="og:description" content="Practical RV troubleshooting, maintenance and ownership guides built around real symptoms and septic systems."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
+          `<meta property="og:type" content="website"><meta property="og:title" content="SepticBeacon Blog | Septic Maintenance & Homeowner Guides"><meta property="og:description" content="Practical septic maintenance, troubleshooting, cost and inspection guides built around real homeowner questions."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
           `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g,"\\u003c")}</script>`,
           {html:true}
         );
       }});
-    }else if(["/about.html","/editorial-policy.html","/how-we-review.html"].includes(clean)){
+    }else if(["/about.html","/contact.html","/privacy.html","/disclaimer.html","/editorial-policy.html","/how-we-review.html"].includes(clean)){
       rw.on("head",{element(el){el.append(`<link rel="canonical" href="${escapeHtml(new URL(clean,url.origin).href)}">`,{html:true})}});
     }
 
