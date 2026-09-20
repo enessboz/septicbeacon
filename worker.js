@@ -2,7 +2,7 @@ import { handleMcp, handleOAuth } from "./mcp.js";
 import { generateArticleImage } from "./mcp-media.js";
 const GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 const GA4_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
-const SB_PUBLIC_ANON_KEY="sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
+const SB_PUBLIC_ANON_KEY="sb_publishable_AvR-71NF4xi_KdBZc-gSAg_mN8Cq8rl";
 let SB_SITE_ID_CACHE=null;
 
 async function sbSiteId(env){
