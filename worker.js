@@ -1457,6 +1457,69 @@ function withSecurityHeaders(response,{admin=false,html=false}={}){
   return new Response(response.body,{status:response.status,statusText:response.statusText,headers:h});
 }
 
+async function processImageJobs(env){
+  if(!env.SUPABASE_URL||!env.SUPABASE_SERVICE_ROLE_KEY||!env.AI||!env.MEDIA_BUCKET)return {completed:0,failed:0};
+  const siteId=await sbSiteId(env);
+  if(!siteId)return {completed:0,failed:0};
+
+  const now=new Date().toISOString();
+  const queuedRes=await fetch(
+    `${env.SUPABASE_URL}/rest/v1/jobs?site_id=eq.${siteId}&job_type=eq.generate_article_image&status=eq.queued&run_after=lte.${encodeURIComponent(now)}&select=id,article_id,input,attempts&order=priority.asc,created_at.asc&limit=4`,
+    {headers:supaHeaders(env,true)}
+  );
+  if(!queuedRes.ok)throw new Error(await queuedRes.text());
+  const queued=await queuedRes.json();
+  let completed=0,failed=0;
+
+  for(const job of queued){
+    const claimRes=await fetch(
+      `${env.SUPABASE_URL}/rest/v1/jobs?id=eq.${job.id}&status=eq.queued&select=id`,
+      {
+        method:"PATCH",
+        headers:{...supaHeaders(env,true),Prefer:"return=representation"},
+        body:JSON.stringify({status:"running",started_at:new Date().toISOString(),attempts:Number(job.attempts||0)+1,error:null})
+      }
+    );
+    if(!claimRes.ok)continue;
+    const claimed=await claimRes.json();
+    if(!claimed.length)continue;
+
+    try{
+      const input=job.input||{};
+      const result=await generateArticleImage(env,{
+        article_id:job.article_id,
+        prompt:String(input.prompt||""),
+        alt_text:String(input.alt_text||"Septic system image"),
+        caption:String(input.caption||""),
+        placement:input.placement==="featured"?"featured":"inline",
+        after_heading:String(input.after_heading||""),
+        steps:Math.min(8,Math.max(1,Number(input.steps||4)))
+      });
+      const output={
+        media_id:result?.media?.id||null,
+        public_url:result?.media?.public_url||null,
+        placement:result?.placement||input.placement||null,
+        inserted_after_heading:result?.inserted_after_heading??null,
+        model:result?.model||"@cf/black-forest-labs/flux-1-schnell"
+      };
+      await fetch(`${env.SUPABASE_URL}/rest/v1/jobs?id=eq.${job.id}`,{
+        method:"PATCH",
+        headers:{...supaHeaders(env,true),Prefer:"return=minimal"},
+        body:JSON.stringify({status:"completed",output,error:null,finished_at:new Date().toISOString()})
+      });
+      completed++;
+    }catch(err){
+      await fetch(`${env.SUPABASE_URL}/rest/v1/jobs?id=eq.${job.id}`,{
+        method:"PATCH",
+        headers:{...supaHeaders(env,true),Prefer:"return=minimal"},
+        body:JSON.stringify({status:"failed",error:String(err?.message||err).slice(0,4000),finished_at:new Date().toISOString()})
+      }).catch(()=>{});
+      failed++;
+    }
+  }
+  return {completed,failed};
+}
+
 async function processScheduledArticles(env){
   if(!env.SUPABASE_URL||!env.SUPABASE_SERVICE_ROLE_KEY)return {published:0,skipped:0};
   const siteId=await sbSiteId(env);
@@ -1914,6 +1977,9 @@ export default {
     return withSecurityHeaders(transformed,{admin:protectedAdmin,html:true});
   },
   async scheduled(controller,env,ctx){
-    ctx.waitUntil(processScheduledArticles(env));
+    ctx.waitUntil(Promise.all([
+      processScheduledArticles(env),
+      processImageJobs(env)
+    ]));
   }
 };
