@@ -1158,7 +1158,7 @@ function isTrustedOrigin(request){
   if(!origin)return true;
   try{
     const u=new URL(origin);
-    return u.protocol==="https:" && u.hostname==="septicbeacon.com";
+    return u.protocol==="https:" && ["septicbeacon.com","septicbeacon.enessboz2.workers.dev"].includes(u.hostname);
   }catch{return false}
 }
 
@@ -1518,7 +1518,7 @@ export default {
     const url=new URL(request.url);
 
     // Force a single public origin for users and search engines.
-    if(url.hostname==="www.septicbeacon.com" || url.hostname==="septicbeacon.enessboz2.workers.dev"){
+    if(url.hostname==="www.septicbeacon.com"){
       const canonical=new URL(url);
       canonical.protocol="https:";
       canonical.hostname="septicbeacon.com";
