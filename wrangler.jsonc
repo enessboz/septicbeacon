@@ -11,7 +11,7 @@
     "run_worker_first": true
   },
   "vars": {
-    "SUPABASE_URL": "https://jyqngstekzvurbirangl.supabase.co",
+    "SUPABASE_URL": "https://dkpsiwytmvgylqhbntmg.supabase.co",
     "GA4_MEASUREMENT_ID": "",
     "GSC_VERIFICATION": ""
   },
