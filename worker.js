@@ -1509,12 +1509,28 @@ async function processImageJobs(env){
       });
       completed++;
     }catch(err){
+      const message=String(err?.message||err).slice(0,4000);
+      const quotaHit=/4006|daily free allocation|used up your daily free allocation/i.test(message);
+      const patch=quotaHit
+        ? {
+            status:"queued",
+            error:message,
+            run_after:new Date(Date.UTC(
+              new Date().getUTCFullYear(),
+              new Date().getUTCMonth(),
+              new Date().getUTCDate()+1,
+              0,5,0,0
+            )).toISOString(),
+            started_at:null,
+            finished_at:null
+          }
+        : {status:"failed",error:message,finished_at:new Date().toISOString()};
       await fetch(`${env.SUPABASE_URL}/rest/v1/jobs?id=eq.${job.id}`,{
         method:"PATCH",
         headers:{...supaHeaders(env,true),Prefer:"return=minimal"},
-        body:JSON.stringify({status:"failed",error:String(err?.message||err).slice(0,4000),finished_at:new Date().toISOString()})
+        body:JSON.stringify(patch)
       }).catch(()=>{});
-      failed++;
+      if(!quotaHit)failed++;
     }
   }
   return {completed,failed};
