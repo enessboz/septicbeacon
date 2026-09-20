@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Google Analytics 4 Setup | SepticBeacon CMS</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+<aside class="admin-side"></aside>
+<main class="admin-main">
+  <div class="admin-top">
+    <div><div class="subtle">Integrations / Google Analytics 4</div><h1>Google Analytics 4 Setup</h1></div>
+    <div class="admin-actions"><a class="btn" href="/sb-control-8n4k/integrations">← Integrations</a></div>
+  </div>
+
+  <div id="ga4-page-message" class="cms-message" style="margin-bottom:14px"></div>
+
+  <div class="ga4-setup-grid">
+    <section class="admin-card">
+      <div class="card-head-v2"><div><span class="eyebrow">Setup</span><h3>Connect GA4 in three steps</h3></div><span id="ga4-connection-badge" class="connection off">Checking…</span></div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <span class="setup-step-no">1</span>
+          <div><h3>Connect Google account</h3><p>Use the Google account that has access to the GA4 property. OAuth credentials remain server-side.</p><div class="setup-actions"><button class="btn primary" id="ga4-connect" type="button">Connect Google</button></div></div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step-no">2</span>
+          <div><h3>Select GA4 property</h3><p>Load the Analytics properties available to the connected account and choose the one that belongs to this site.</p>
+            <div class="ga4-property-panel">
+              <label class="field"><span>GA4 property</span><select id="ga4-property"><option value="">Connect Google first</option></select></label>
+              <label class="field"><span>Measurement ID <small>(optional)</small></span><input id="ga4-measurement" placeholder="G-XXXXXXXXXX"></label>
+              <div class="setup-actions"><button class="btn" id="ga4-load" type="button" disabled>Load properties</button><button class="btn primary" id="ga4-save" type="button" disabled>Save property</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <span class="setup-step-no">3</span>
+          <div><h3>Sync Analytics data</h3><p>Import the previous 28 days into the CMS. Performance dashboards will use these stored GA4 metrics.</p><div class="setup-actions"><button class="btn primary" id="ga4-sync" type="button" disabled>Sync last 28 days</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="admin-card">
+      <div class="card-head-v2"><div><span class="eyebrow">Connection</span><h3>Current status</h3></div></div>
+      <div class="integration-status-list">
+        <div><span>Google account</span><b id="status-account">Checking…</b></div>
+        <div><span>Property ID</span><b id="status-property">—</b></div>
+        <div><span>Measurement ID</span><b id="status-measurement">—</b></div>
+        <div><span>Last sync</span><b id="status-sync">—</b></div>
+      </div>
+      <p class="subtle" style="margin-top:16px">Required Google Cloud APIs: Google Analytics Data API and Google Analytics Admin API. The same OAuth client can be used for Search Console and GA4.</p>
+      <div id="ga4-action-message" class="cms-message"></div>
+    </aside>
+  </div>
+</main>
+</div>
+<script type="module">
+await import("/cms.js");
+const A=window.RVFAdmin;
+await A.ready;
+const $=s=>document.querySelector(s);
+const msg=(text,type="")=>{const el=$("#ga4-action-message");el.textContent=text;el.className=("cms-message "+type).trim()};
+async function loadStatus(){
+  const d=await A.adminJson("/api/ga4/status");
+  $("#status-account").textContent=d.connected?"Connected":"Not connected";
+  $("#status-property").textContent=d.property_id||"Not selected";
+  $("#status-measurement").textContent=d.measurement_id||"Optional";
+  $("#status-sync").textContent=d.last_sync_at?A.formatSiteDateTime(d.last_sync_at):"Never";
+  $("#ga4-connection-badge").textContent=d.connected&&d.property_id?"Connected":"Setup required";
+  $("#ga4-connection-badge").className="connection "+(d.connected&&d.property_id?"":"off");
+  $("#ga4-connect").textContent=d.connected?"Reconnect Google":"Connect Google";
+  $("#ga4-load").disabled=!d.connected;
+  $("#ga4-save").disabled=!d.connected;
+  $("#ga4-sync").disabled=!(d.connected&&d.property_id);
+  if(d.measurement_id)$("#ga4-measurement").value=d.measurement_id;
+  if(d.last_error)msg(d.last_error,"error");
+  return d;
+}
+$("#ga4-connect").addEventListener("click",async e=>{
+  const b=e.currentTarget;b.disabled=true;msg("Preparing Google connection…");
+  try{const d=await A.adminJson("/api/ga4/connect",{method:"POST"});window.location.assign(d.url)}
+  catch(err){msg(err.message,"error");b.disabled=false}
+});
+$("#ga4-load").addEventListener("click",async e=>{
+  const b=e.currentTarget;b.disabled=true;msg("Loading GA4 properties…");
+  try{
+    const d=await A.adminJson("/api/ga4/properties");
+    const select=$("#ga4-property");
+    select.innerHTML='<option value="">Select property…</option>'+(d.properties||[]).map(p=>'<option value="'+A.esc(p.property_id)+'" '+(String(p.property_id)===String(d.current||"")?"selected":"")+'>'+A.esc(p.display_name)+' · '+A.esc(p.property_id)+(p.account_name?' · '+A.esc(p.account_name):'')+'</option>').join("");
+    if(d.measurement_id&&!$("#ga4-measurement").value)$("#ga4-measurement").value=d.measurement_id;
+    msg((d.properties||[]).length+" properties loaded.","success");
+  }catch(err){msg(err.message,"error")}finally{b.disabled=false}
+});
+$("#ga4-save").addEventListener("click",async e=>{
+  const b=e.currentTarget;b.disabled=true;msg("Saving property…");
+  try{
+    const property_id=$("#ga4-property").value;
+    if(!property_id)throw new Error("Choose a GA4 property first.");
+    const measurement_id=$("#ga4-measurement").value.trim();
+    await A.adminJson("/api/ga4/property",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({property_id,measurement_id})});
+    msg("GA4 property saved.","success");await loadStatus();
+  }catch(err){msg(err.message,"error")}finally{b.disabled=false}
+});
+$("#ga4-sync").addEventListener("click",async e=>{
+  const b=e.currentTarget;b.disabled=true;msg("Syncing the last 28 days…");
+  try{const d=await A.adminJson("/api/ga4/sync",{method:"POST"});msg("Synced "+(d.rows||0)+" GA4 rows.","success");await loadStatus()}
+  catch(err){msg(err.message,"error")}finally{b.disabled=false}
+});
+try{
+  if(new URLSearchParams(location.search).get("ga4_connected")==="1"){
+    $("#ga4-page-message").textContent="Google account connected. Load properties and choose the correct GA4 property.";
+    $("#ga4-page-message").className="cms-message success";
+  }
+  await loadStatus();
+}catch(err){msg(err.message,"error")}
+</script>
+</body></html>
