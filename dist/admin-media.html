@@ -9,7 +9,7 @@
 <body class="admin-body" data-admin-view="media">
 <div class="admin-shell">
 <aside class="admin-side">
-  <a class="brand" href="/sb-control-8n4k"><span class="brandmark">R</span>SepticBeacon <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+  <a class="brand" href="/sb-control-8n4k"><span class="brandmark">S</span>SepticBeacon <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
   <div class="admin-group-label">İçerik</div>
   <nav class="admin-menu">
     <a href="/sb-control-8n4k">▦ Dashboard</a>
@@ -52,15 +52,15 @@
     <section class="admin-card media-upload-card">
       <div class="integration-head"><div><h3 style="margin:0">Yeni görsel yükle</h3><p class="subtle">PNG/JPG/AVIF yükle; sistem tarayıcıda WebP’ye çevirip sıkıştırır.</p></div><span class="work-badge">WEBP</span></div>
       <div id="media-dropzone" class="media-dropzone">
-        <b>Görsel seç veya buraya sürükle</b>
-        <span>Maksimum uzun kenar 2000px · WebP output</span>
-        <input id="media-library-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+        <b>Bir veya birden fazla görsel seç ya da buraya sürükle</b>
+        <span>Toplu yükleme desteklenir · maksimum uzun kenar 2000px · WebP output</span>
+        <input id="media-library-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif">
       </div>
       <div class="quick-grid" style="margin-top:14px">
         <div class="quick-field full"><label for="media-library-alt">Alt text</label><input id="media-library-alt" placeholder="Describe the image accurately"></div>
         <div class="quick-field full"><label for="media-library-caption">Caption <span class="subtle">(optional)</span></label><input id="media-library-caption"></div>
       </div>
-      <button id="media-library-upload" type="button" class="btn primary" style="margin-top:12px">Compress & upload</button>
+      <button id="media-library-upload" type="button" class="btn primary" style="margin-top:12px">Compress & upload selected</button>
       <div id="media-library-upload-status" class="cms-message"></div>
     </section>
 
