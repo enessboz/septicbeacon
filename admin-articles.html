@@ -1,0 +1,56 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Articles | RVFixWise CMS</title><link rel="stylesheet" href="/styles.css"></head>
+<body class="admin-body"><div class="admin-shell">
+<aside class="admin-side">
+  <a class="brand" href="/rvf-control-8n4k"><span class="brandmark">R</span>RVFixWise <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+  <div class="admin-group-label">İçerik</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k">▦ Dashboard</a>
+    <a href="/rvf-control-8n4k/articles">✎ İçerik Kütüphanesi</a>
+    <a href="/rvf-control-8n4k/quick-entry">＋ Quick Entry</a>
+    <a href="/rvf-control-8n4k/ai-content">✦ AI Content</a>
+    <a href="/rvf-control-8n4k/media">▧ Media Library</a>
+    <a href="/rvf-control-8n4k/topic-map">◉ Topic Map</a>
+    <a href="/rvf-control-8n4k/calendar">▣ Content Calendar</a>
+    <a href="/rvf-control-8n4k/refresh">↻ Refresh Queue</a>
+  </nav>
+  <div class="admin-group-label">SEO & Growth</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/seo">◎ SEO Overview</a>
+    <a href="/rvf-control-8n4k/seo#technical-seo">▤ Sitemap & Robots</a>
+    <a href="/rvf-control-8n4k/gsc">G Search Console</a>
+    <a href="/rvf-control-8n4k/opportunities">↗ Content Opportunities</a>
+    <a href="/rvf-control-8n4k/internal-links">⛓ Internal Links</a>
+    <a href="/rvf-control-8n4k/crawl">⌘ Crawl Monitor</a>
+    <a href="/rvf-control-8n4k/site-health">♥ Site Health</a>
+    <a href="/rvf-control-8n4k/redirects">↪ Redirects</a>
+  </nav>
+  <div class="admin-group-label">Operasyon</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/alerts">! Alerts</a>
+    <a href="/rvf-control-8n4k/ai-jobs">✦ Jobs</a>
+  </nav>
+  <div class="admin-group-label">Data & Sistem</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/analytics">▥ Analytics</a>
+    <a href="/rvf-control-8n4k/integrations">⚙ Integrations</a>
+  </nav>
+  <div class="admin-side-foot">RVFixWise CMS<br>Supabase + Cloudflare</div>
+</aside>
+<main class="admin-main">
+<div class="admin-top"><div><div class="subtle">Content library</div><h1>Articles</h1></div><div class="admin-actions"><a class="btn" href="/rvf-control-8n4k/calendar">Calendar</a><a class="btn primary" href="/rvf-control-8n4k/quick-entry">+ New article</a></div></div>
+<div class="admin-toolbar admin-toolbar-stack">
+  <div class="admin-search">⌕ <input id="article-search" placeholder="Search title, slug or keyword"></div>
+  <div id="article-filters" class="filter-row"></div>
+  <div class="bulk-toolbar" id="bulk-toolbar" hidden>
+    <div><b id="bulk-selected-count">0</b> içerik seçildi</div>
+    <div class="admin-actions">
+      <button class="btn" type="button" id="bulk-archive">Seçilenleri arşivle</button>
+      <button class="btn danger" type="button" id="bulk-delete">Seçilenleri sil</button>
+      <button class="btn" type="button" id="bulk-clear">Seçimi temizle</button>
+    </div>
+  </div>
+</div>
+<div class="table-card"><table><thead><tr><th class="select-col"><input type="checkbox" id="select-all-articles" aria-label="Tüm içerikleri seç"></th><th>İçerik</th><th>Tür</th><th>Kategori</th><th>Durum</th><th>Aksiyon</th><th>Güncelleme</th></tr></thead>
+<tbody id="live-articles"><tr><td colspan="7">Yükleniyor…</td></tr></tbody></table></div>
+</main></div><script type="module" src="/cms.js"></script></body></html>
