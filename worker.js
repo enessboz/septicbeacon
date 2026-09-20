@@ -2,23 +2,24 @@ import { handleMcp, handleOAuth } from "./mcp.js";
 import { generateArticleImage } from "./mcp-media.js";
 const GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 const GA4_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
-const RVF_PUBLIC_ANON_KEY="sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
-let RVF_SITE_ID_CACHE=null;
+const SB_PUBLIC_ANON_KEY="sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
+let SB_SITE_ID_CACHE=null;
 
-async function rvfSiteId(env){
-  if(RVF_SITE_ID_CACHE)return RVF_SITE_ID_CACHE;
-  if(!env.SUPABASE_URL||!env.SUPABASE_SERVICE_ROLE_KEY)return null;
-  const r=await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.septicbeacon.com&select=id&limit=1`,{
-    headers:supaHeaders(env,true)
+async function sbSiteId(env){
+  if(SB_SITE_ID_CACHE)return SB_SITE_ID_CACHE;
+  if(!env.SUPABASE_URL)return null;
+  const useService=!!env.SUPABASE_SERVICE_ROLE_KEY;
+  const r=await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.septicbeacon.com&is_active=eq.true&select=id&limit=1`,{
+    headers:supaHeaders(env,useService)
   });
   if(!r.ok)return null;
   const row=(await r.json())[0];
-  RVF_SITE_ID_CACHE=row?.id||null;
-  return RVF_SITE_ID_CACHE;
+  SB_SITE_ID_CACHE=row?.id||null;
+  return SB_SITE_ID_CACHE;
 }
 
 function supaHeaders(env, service=false, userToken=null){
-  const key = service ? env.SUPABASE_SERVICE_ROLE_KEY : (env.SUPABASE_ANON_KEY||RVF_PUBLIC_ANON_KEY);
+  const key = service ? env.SUPABASE_SERVICE_ROLE_KEY : (env.SUPABASE_ANON_KEY||SB_PUBLIC_ANON_KEY);
   const h = {
     apikey: key,
     "Content-Type": "application/json"
@@ -38,7 +39,7 @@ function supaHeaders(env, service=false, userToken=null){
 async function getIdentityItems(env){
   if(!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) return [];
   try{
-    const siteId=await rvfSiteId(env);
+    const siteId=await sbSiteId(env);
     if(!siteId)return [];
     const r=await fetch(
       `${env.SUPABASE_URL}/rest/v1/site_identity_items?site_id=eq.${siteId}&enabled=eq.true&select=id,provider,item_type,label,key_name,value,extra`,
@@ -54,7 +55,7 @@ async function getIdentityItems(env){
 async function getVerification(env){
   if(!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) return null;
   try{
-    const siteId=await rvfSiteId(env);
+    const siteId=await sbSiteId(env);
     if(!siteId)return null;
     const r = await fetch(
       `${env.SUPABASE_URL}/rest/v1/site_verification?site_id=eq.${siteId}&provider=eq.gsc&enabled=eq.true&select=verification_method,meta_token,html_filename,html_content&limit=1`,
@@ -71,7 +72,7 @@ async function requireCmsAdmin(request,env,allowedRoles=["owner","admin"]){
   const auth=request.headers.get("Authorization");
   if(!auth||!/^Bearer\s+.+/i.test(auth)) return null;
 
-  const anon=env.SUPABASE_ANON_KEY||RVF_PUBLIC_ANON_KEY;
+  const anon=env.SUPABASE_ANON_KEY||SB_PUBLIC_ANON_KEY;
   const userRes=await fetch(`${env.SUPABASE_URL}/auth/v1/user`,{
     headers:{apikey:anon,Authorization:auth}
   });
@@ -809,7 +810,7 @@ async function publicApi(env,path){
 }
 
 async function getPublicArticle(env,slug){
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)return null;
   const rows=await publicApi(
     env,
@@ -825,7 +826,7 @@ async function getPublicArticle(env,slug){
 }
 
 async function getPublicCategory(env,slug){
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)return null;
   const cats=await publicApi(
     env,
@@ -1000,7 +1001,7 @@ function isPublicReadyArticle(a){
   return true;
 }
 async function getHomeData(env){
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)return {categories:[],articles:[]};
   const [categories,articles]=await Promise.all([
     publicApi(env,`/rest/v1/categories?site_id=eq.${siteId}&is_active=eq.true&select=id,name,slug,description&order=sort_order&limit=12`),
@@ -1010,7 +1011,7 @@ async function getHomeData(env){
 }
 
 async function getGuidesData(env){
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)return {articles:[],categories:[]};
   const results=await Promise.all([
     publicApi(env,`/rest/v1/articles?site_id=eq.${siteId}&status=eq.published&select=title,slug,excerpt,content_type,published_at,updated_at,featured_image_url,featured_image_alt,categories(name,slug)&order=published_at.desc&limit=120`),
@@ -1330,7 +1331,7 @@ async function serveMedia(env,key){
 async function findRedirect(env,path){
   if(!env.SUPABASE_SERVICE_ROLE_KEY)return null;
   try{
-    const siteId=await rvfSiteId(env);
+    const siteId=await sbSiteId(env);
     if(!siteId)return null;
     const rows=await fetch(
       `${env.SUPABASE_URL}/rest/v1/redirects?site_id=eq.${siteId}&source_path=eq.${encodeURIComponent(path)}&is_active=eq.true&select=destination_path,status_code&limit=1`,
@@ -1360,7 +1361,7 @@ const DEFAULT_SEO_SETTINGS={
 
 async function getSeoSettings(env,siteId=null){
   try{
-    const id=siteId||await rvfSiteId(env);
+    const id=siteId||await sbSiteId(env);
     if(!id)return {...DEFAULT_SEO_SETTINGS};
     const r=await fetch(`${env.SUPABASE_URL}/rest/v1/site_identity_items?site_id=eq.${id}&provider=eq.seo&key_name=eq.seo_core&select=id,value,updated_at&order=updated_at.desc&limit=1`,{headers:supaHeaders(env,true)});
     if(!r.ok)return {...DEFAULT_SEO_SETTINGS};
@@ -1401,7 +1402,7 @@ async function seoSettingsApi(request,env){
 }
 async function sitemapResponse(request,env){
   const origin=new URL(request.url).origin;
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)throw new Error("SepticBeacon site record not found");
   const settings=await getSeoSettings(env,siteId);
   if(settings.sitemap_enabled===false)return new Response("Not found",{status:404});
@@ -1459,7 +1460,7 @@ function withSecurityHeaders(response,{admin=false,html=false}={}){
 
 async function processScheduledArticles(env){
   if(!env.SUPABASE_URL||!env.SUPABASE_SERVICE_ROLE_KEY)return {published:0,skipped:0};
-  const siteId=await rvfSiteId(env);
+  const siteId=await sbSiteId(env);
   if(!siteId)return {published:0,skipped:0};
 
   const now=new Date().toISOString();
