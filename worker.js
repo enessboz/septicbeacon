@@ -1444,7 +1444,7 @@ function withSecurityHeaders(response,{admin=false,html=false}={}){
     "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; "+
     "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "+
     "img-src 'self' data: blob: https:; font-src 'self' data:; "+
-    "connect-src 'self' https://jyqngstekzvurbirangl.supabase.co https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com"
+    "connect-src 'self' https://dkpsiwytmvgylqhbntmg.supabase.co https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com"
   );
   if(admin){
     h.set("Cache-Control","no-store, max-age=0");
