@@ -1,0 +1,72 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEO Overview | RVFixWise CMS</title><link rel="stylesheet" href="/styles.css"></head>
+<body class="admin-body" data-admin-view="seo"><div class="admin-shell">
+<aside class="admin-side">
+  <a class="brand" href="/rvf-control-8n4k"><span class="brandmark">R</span>RVFixWise <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+  <div class="admin-group-label">İçerik</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k">▦ Dashboard</a>
+    <a href="/rvf-control-8n4k/articles">✎ İçerik Kütüphanesi</a>
+    <a href="/rvf-control-8n4k/quick-entry">＋ Quick Entry</a>
+    <a href="/rvf-control-8n4k/topic-map">◉ Topic Map</a>
+    <a href="/rvf-control-8n4k/calendar">▣ Content Calendar</a>
+    <a href="/rvf-control-8n4k/refresh">↻ Refresh Queue</a>
+  </nav>
+  <div class="admin-group-label">SEO & Growth</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/seo">◎ SEO Overview</a>
+    <a href="/rvf-control-8n4k/seo#technical-seo">▤ Sitemap & Robots</a>
+    <a href="/rvf-control-8n4k/gsc">G Search Console</a>
+    <a href="/rvf-control-8n4k/opportunities">↗ Content Opportunities</a>
+    <a href="/rvf-control-8n4k/internal-links">⛓ Internal Links</a>
+    <a href="/rvf-control-8n4k/crawl">⌘ Crawl Monitor</a>
+    <a href="/rvf-control-8n4k/site-health">♥ Site Health</a>
+    <a href="/rvf-control-8n4k/redirects">↪ Redirects</a>
+  </nav>
+  <div class="admin-group-label">Operasyon</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/alerts">! Alerts</a>
+    <a href="/rvf-control-8n4k/ai-jobs">✦ Jobs</a>
+  </nav>
+  <div class="admin-group-label">Data & Sistem</div>
+  <nav class="admin-menu">
+    <a href="/rvf-control-8n4k/analytics">▥ Analytics</a>
+    <a href="/rvf-control-8n4k/integrations">⚙ Integrations</a>
+  </nav>
+  <div class="admin-side-foot">RVFixWise CMS<br>Supabase + Cloudflare</div>
+</aside>
+
+<main class="admin-main">
+<div class="admin-top"><div><div class="subtle">Yayın, metadata, index ve GSC durumu</div><h1>SEO Overview</h1></div>
+<div class="admin-actions"><button class="btn" id="refresh-view">Yenile</button></div></div>
+<section id="technical-seo" class="seo-static-shortcuts">
+  <a href="/sitemap.xml" target="_blank" rel="noopener"><span>XML</span><div><b>Dynamic Sitemap</b><small>Yayınlanmış içerik ve aktif kategorilerden otomatik üretilir.</small></div></a>
+  <a href="/robots.txt" target="_blank" rel="noopener"><span>TXT</span><div><b>robots.txt</b><small>Canlı robots kurallarını görüntüle.</small></div></a>
+  <div class="seo-static-note"><b>Sitemap & Robots ayarları</b><small>Aşağıdaki SEO Settings alanından düzenlenir ve kaydedildiğinde Worker tarafından anında kullanılır.</small></div>
+</section>
+<section class="admin-card seo-admin-settings seo-settings-static" id="seo-settings-panel">
+  <div class="seo-admin-head">
+    <div><span class="subtle">Sitewide technical SEO</span><h3>SEO Settings</h3></div>
+    <span class="seo-status-badge">Live</span>
+  </div>
+  <form id="seo-core-form">
+    <label class="field"><span>Site name</span><input id="seo-site-name" value="RVFixWise"></label>
+    <label class="field"><span>Default meta description</span><textarea id="seo-default-description" rows="3" placeholder="Default description used when a page does not define its own metadata."></textarea><small>Zorunlu karakter limiti yok. Doğal ve açıklayıcı tut.</small></label>
+    <div class="seo-toggle-grid">
+      <label class="seo-toggle"><input id="seo-sitemap-enabled" type="checkbox" checked><span><b>Dynamic sitemap</b><small>Published içerikleri Supabase’den otomatik üretir.</small></span></label>
+      <label class="seo-toggle"><input id="seo-sitemap-categories" type="checkbox" checked><span><b>Include categories</b><small>Aktif kategori URL’lerini sitemap’e ekler.</small></span></label>
+      <label class="seo-toggle"><input id="seo-sitemap-static" type="checkbox" checked><span><b>Include core pages</b><small>Home, Blog, About ve editorial sayfalarını ekler.</small></span></label>
+      <label class="seo-toggle"><input id="seo-robots-enabled" type="checkbox" checked><span><b>robots.txt</b><small>Worker tarafından dinamik robots.txt yayınlar.</small></span></label>
+      <label class="seo-toggle"><input id="seo-oai-enabled" type="checkbox" checked><span><b>OAI SearchBot</b><small>Public sayfaları açık, admin/API alanlarını kapalı tutar.</small></span></label>
+    </div>
+    <label class="field"><span>Additional robots.txt rules</span><textarea id="seo-extra-robots" rows="7" placeholder="Örnek:&#10;Disallow: /temporary-area/"></textarea><small>Ek kurallar mevcut güvenli admin/API kurallarının sonuna eklenir.</small></label>
+    <div class="seo-admin-actions">
+      <button type="submit" class="btn primary" id="seo-save-settings">Save SEO settings</button>
+      <a class="btn" href="/sitemap.xml" target="_blank" rel="noopener">Open sitemap</a>
+      <a class="btn" href="/robots.txt" target="_blank" rel="noopener">Open robots.txt</a>
+    </div>
+    <div id="seo-settings-message" class="cms-message" aria-live="polite"></div>
+  </form>
+</section>
+<div id="admin-live-view"></div>
+</main></div><script type="module" src="/cms.js"></script></body></html>
