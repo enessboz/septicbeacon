@@ -8,7 +8,7 @@ let RVF_SITE_ID_CACHE=null;
 async function rvfSiteId(env){
   if(RVF_SITE_ID_CACHE)return RVF_SITE_ID_CACHE;
   if(!env.SUPABASE_URL||!env.SUPABASE_SERVICE_ROLE_KEY)return null;
-  const r=await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.rvfixwise.com&select=id&limit=1`,{
+  const r=await fetch(`${env.SUPABASE_URL}/rest/v1/sites?domain=eq.septicbeacon.com&select=id&limit=1`,{
     headers:supaHeaders(env,true)
   });
   if(!r.ok)return null;
@@ -84,7 +84,7 @@ async function requireCmsAdmin(request,env,allowedRoles=["owner","admin"]){
   );
   if(!memberRes.ok) return null;
   const members=await memberRes.json();
-  const requestedSite=String(request.headers.get("X-RVF-Site-ID")||"").trim();
+  const requestedSite=String(request.headers.get("X-SB-Site-ID")||"").trim();
   const member=requestedSite
     ? members.find(x=>x.site_id===requestedSite)
     : members[0];
@@ -248,7 +248,7 @@ async function ga4Callback(request,env,url){
   if(!tr.ok) return new Response(token.error_description || "Google token exchange failed.",{status:400});
   await saveCredential(env,siteId,token,null,"ga4");
   await updateIntegration(env,siteId,{status:"connected",last_error:null},"ga4");
-  return Response.redirect(`${url.origin}/rvf-control-8n4k/ga4?ga4_connected=1`,302);
+  return Response.redirect(`${url.origin}/sb-control-8n4k/ga4?ga4_connected=1`,302);
 }
 
 async function ga4Properties(request,env){
@@ -439,7 +439,7 @@ async function gscCallback(request,env,url){
     last_error:null
   });
 
-  return Response.redirect(`${url.origin}/rvf-control-8n4k/gsc?connected=1`,302);
+  return Response.redirect(`${url.origin}/sb-control-8n4k/gsc?connected=1`,302);
 }
 
 async function gscSync(request,env){
@@ -847,7 +847,7 @@ function articleReadingMeta(markdown=""){
 }
 
 function articleAiToolsHtml(a){
-  const prompt=escapeHtml('RVFixWise: Please summarize this page in English. Focus on the main problem, the diagnostic sequence, safety warnings, likely causes, checks to perform before replacing parts, and the most useful next steps. Keep the summary practical and easy to scan.');
+  const prompt=escapeHtml('SepticBeacon: Please summarize this page in English. Focus on the main problem, the diagnostic sequence, safety warnings, likely causes, checks to perform before replacing parts, and the most useful next steps. Keep the summary practical and easy to scan.');
   const providers=[
     {id:"chatgpt",name:"ChatGPT",url:"https://chatgpt.com/",icon:"https://commons.wikimedia.org/wiki/Special:Redirect/file/ChatGPT-Logo.svg",fallback:"C"},
     {id:"gemini",name:"Gemini",url:"https://gemini.google.com/",icon:"https://cdn.simpleicons.org/googlegemini/4285F4",fallback:"G"},
@@ -858,14 +858,14 @@ function articleAiToolsHtml(a){
   const buttons=providers.map(function(item){
     return '<button type="button" class="rvf-ai-tool rvf-ai-'+item.id+'" data-ai-provider="'+item.id+'" data-ai-open="'+escapeHtml(item.url)+'" data-ai-prompt="'+prompt+'"><span class="rvf-ai-logo"><span class="rvf-ai-logo-fallback">'+item.fallback+'</span>'+(item.icon?'<img src="'+escapeHtml(item.icon)+'" alt="" width="20" height="20" loading="lazy">':'')+'</span><b>'+escapeHtml(item.name)+'</b><i aria-hidden="true">↗</i></button>';
   }).join("");
-  return '<section class="rvf-ai-tools" aria-label="AI reading tools"><div class="rvf-ai-tools-copy"><span>AI READING TOOLS</span><strong>Ask an AI to summarize this RVFixWise guide</strong><p>The current article URL is included automatically. If a provider does not support URL prompt prefill, the complete prompt is copied to your clipboard before it opens.</p></div><div class="rvf-ai-tools-actions">'+buttons+'</div><div class="rvf-ai-copy-status" aria-live="polite"></div></section>';
+  return '<section class="rvf-ai-tools" aria-label="AI reading tools"><div class="rvf-ai-tools-copy"><span>AI READING TOOLS</span><strong>Ask an AI to summarize this SepticBeacon guide</strong><p>The current article URL is included automatically. If a provider does not support URL prompt prefill, the complete prompt is copied to your clipboard before it opens.</p></div><div class="rvf-ai-tools-actions">'+buttons+'</div><div class="rvf-ai-copy-status" aria-live="polite"></div></section>';
 }
 
 function articleRelatedSidebarHtml(a){
   const related=Array.isArray(a.related)?a.related.slice(0,3):[];
   if(!related.length)return "";
   const links=related.map(function(item){ return '<a href="/blog/'+escapeHtml(item.slug)+'"><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml((item.categories&&item.categories.name)||"RV Guide")+'</small></a>'; }).join("");
-  return '<div class="rvf-side-card rvf-side-related"><span>MORE RVFIXWISE GUIDES</span><strong>Keep reading</strong><div class="rvf-side-related-list">'+links+'</div></div>';
+  return '<div class="rvf-side-card rvf-side-related"><span>MORE SEPTICBEACON GUIDES</span><strong>Keep reading</strong><div class="rvf-side-related-list">'+links+'</div></div>';
 }
 
 function articleRelatedBottomHtml(a,category){
@@ -900,7 +900,7 @@ function articleHtml(a){
             <div class="rvf-blog-byline">
               <span class="rvf-author-mark">R</span>
               <span>
-                <b>RVFixWise Editorial Team</b>
+                <b>SepticBeacon Editorial Team</b>
                 <small>${published?`Published ${escapeHtml(published)}`:""}${updated&&updated!==published?` · Updated ${escapeHtml(updated)}`:""}</small>
               </span>
               <span class="rvf-read-time"><b>${reading.minutes} min read</b><small>${reading.words.toLocaleString("en-US")} words</small></span>
@@ -929,7 +929,7 @@ function articleHtml(a){
           ${bodyHtml}
 
           <div class="article-end-note">
-            <strong>RVFixWise editorial note</strong>
+            <strong>SepticBeacon editorial note</strong>
             <p>This guide is educational. Stop and use a qualified RV technician when a procedure involves unsafe electrical, propane, structural or pressurized-system work beyond your experience.</p>
           </div>
         </article>
@@ -940,7 +940,7 @@ function articleHtml(a){
                 </section>
 
         <section class="rvf-blog-cta">
-          <div><span>RVFIXWISE</span><h2>Diagnose first. Replace parts second.</h2><p>Use the guide library to continue troubleshooting by symptom or RV system.</p></div>
+          <div><span>SEPTICBEACON</span><h2>Diagnose first. Replace parts second.</h2><p>Use the guide library to continue troubleshooting by symptom or RV system.</p></div>
           <a class="btn lime" href="/guides">Find the next guide</a>
         </section>
       </main>
@@ -1105,7 +1105,7 @@ function guidesHtml(data){
         <div class='blog-index-feature-meta'><a href='/category/${escapeHtml(featured.categories?.slug||'guides')}'>${escapeHtml(featured.categories?.name||'RV Guide')}</a>${featureDate?`<span>${escapeHtml(featureDate)}</span>`:''}</div>
         <span class='blog-index-feature-label'>LATEST GUIDE</span>
         <h2><a href='/blog/${escapeHtml(featured.slug)}'>${escapeHtml(featured.title)}</a></h2>
-        <p>${escapeHtml(featured.excerpt||'Open the latest RVFixWise guide.')}</p>
+        <p>${escapeHtml(featured.excerpt||'Open the latest SepticBeacon guide.')}</p>
         <a class='btn lime' href='/blog/${escapeHtml(featured.slug)}'>Read the latest guide</a>
       </div>
     </section>
@@ -1116,19 +1116,19 @@ function guidesHtml(data){
     </section>`:''}
 
     <section class='blog-index-latest'>
-      <div class='blog-index-section-head'><div><span>LATEST FROM RVFIXWISE</span><h2>Practical troubleshooting, maintenance and ownership guides.</h2></div><a href='/search.html'>Search the library →</a></div>
+      <div class='blog-index-section-head'><div><span>LATEST FROM SEPTICBEACON</span><h2>Practical troubleshooting, maintenance and ownership guides.</h2></div><a href='/search.html'>Search the library →</a></div>
       <div class='blog-index-grid'>${cards||`<div class='empty-state'>More guides are being prepared.</div>`}</div>
     </section>
 
     <section class='blog-index-search-cta'>
       <div><span>NOT SURE WHERE TO START?</span><h2>Search by the symptom you are seeing.</h2><p>Use plain language such as “water pump runs but no water” or “RV AC not cooling.”</p></div>
-      <a class='btn lime' href='/search.html'>Search RVFixWise</a>
+      <a class='btn lime' href='/search.html'>Search SepticBeacon</a>
     </section>
   </div>`;
 }
 function homePopularHtml(articles){
   if(!articles.length){
-    return `<a class="check" href="/search.html"><i>1</i><span>Search the RVFixWise guide library</span></a>
+    return `<a class="check" href="/search.html"><i>1</i><span>Search the SepticBeacon guide library</span></a>
       <a class="check" href="/#systems"><i>2</i><span>Browse by RV system</span></a>`;
   }
   return articles.slice(0,4).map((a,i)=>`<a class="check" href="/blog/${escapeHtml(a.slug)}">
@@ -1151,7 +1151,7 @@ function isTrustedOrigin(request){
   if(!origin)return true;
   try{
     const u=new URL(origin);
-    return u.protocol==="https:" && u.hostname==="rvfixwise.com";
+    return u.protocol==="https:" && u.hostname==="septicbeacon.com";
   }catch{return false}
 }
 
@@ -1342,7 +1342,7 @@ function xmlEscape(v){
 }
 
 const DEFAULT_SEO_SETTINGS={
-  site_name:"RVFixWise",
+  site_name:"SepticBeacon",
   default_meta_description:"Practical RV troubleshooting, maintenance and ownership guidance.",
   sitemap_enabled:true,
   sitemap_include_categories:true,
@@ -1396,7 +1396,7 @@ async function seoSettingsApi(request,env){
 async function sitemapResponse(request,env){
   const origin=new URL(request.url).origin;
   const siteId=await rvfSiteId(env);
-  if(!siteId)throw new Error("RVFixWise site record not found");
+  if(!siteId)throw new Error("SepticBeacon site record not found");
   const settings=await getSeoSettings(env,siteId);
   if(settings.sitemap_enabled===false)return new Response("Not found",{status:404});
   const results=await Promise.all([
@@ -1511,21 +1511,21 @@ export default {
     const url=new URL(request.url);
 
     // Force a single public origin for users and search engines.
-    if(url.hostname==="www.rvfixwise.com" || url.hostname==="rvfixwise.enessboz2.workers.dev"){
+    if(url.hostname==="www.septicbeacon.com" || url.hostname==="septicbeacon.enessboz2.workers.dev"){
       const canonical=new URL(url);
       canonical.protocol="https:";
-      canonical.hostname="rvfixwise.com";
+      canonical.hostname="septicbeacon.com";
       canonical.port="";
       return Response.redirect(canonical.toString(),301);
     }
 
     const clean=url.pathname.replace(/\/+$/,"")||"/";
 
-    // Remote Model Context Protocol endpoint for RVFixWise CMS.
+    // Remote Model Context Protocol endpoint for SepticBeacon CMS.
     if(clean==="/mcp")return handleMcp(request,env);
     if(clean.startsWith("/oauth/")||clean.startsWith("/.well-known/oauth-"))return handleOAuth(request,env,clean);
 
-    const adminBase="/rvf-control-8n4k";
+    const adminBase="/sb-control-8n4k";
     const isPrivateAdmin=clean===adminBase || clean.startsWith(adminBase+"/");
     const isLegacyAdmin=
       clean==="/admin" || clean.startsWith("/admin/") ||
@@ -1539,7 +1539,7 @@ export default {
     }
 
     // Reject unexpected hosts and cross-site state-changing API requests.
-    if(!["rvfixwise.com","www.rvfixwise.com","rvfixwise.enessboz2.workers.dev"].includes(url.hostname)){
+    if(!["septicbeacon.com","www.septicbeacon.com","septicbeacon.enessboz2.workers.dev"].includes(url.hostname)){
       return new Response("Bad Request",{status:400});
     }
     if(
@@ -1800,8 +1800,8 @@ export default {
                 dateModified:routeData.updated_at||routeData.published_at||undefined,
                 articleSection:categoryName,
                 ...(ogImage?{image:[ogImage]}:{}),
-                author:{"@type":"Organization","name":"RVFixWise Editorial Team","url":url.origin+"/how-we-review.html"},
-                publisher:{"@type":"Organization","name":"RVFixWise","url":url.origin}
+                author:{"@type":"Organization","name":"SepticBeacon Editorial Team","url":url.origin+"/how-we-review.html"},
+                publisher:{"@type":"Organization","name":"SepticBeacon","url":url.origin}
               },
               {
                 "@type":"BreadcrumbList",
@@ -1831,7 +1831,7 @@ export default {
     });
 
     if(routeType==="article"&&routeData){
-      const title=`${routeData.seo_title||routeData.title} | RVFixWise`;
+      const title=`${routeData.seo_title||routeData.title} | SepticBeacon`;
       const description=routeData.meta_description||routeData.excerpt||"Practical RV troubleshooting and maintenance guidance.";
       const canonical=new URL(`/blog/${routeData.slug}`,url.origin).href;
 
@@ -1845,7 +1845,7 @@ export default {
       const c=routeData.category;
       const description=c.description||`Practical ${c.name} RV troubleshooting and maintenance guides.`;
       const canonical=new URL(clean,url.origin).href;
-      rw.on("title",{element(el){el.setInnerContent(`${c.name} RV Guides | RVFixWise`)}});
+      rw.on("title",{element(el){el.setInnerContent(`${c.name} RV Guides | SepticBeacon`)}});
       rw.on('meta[name="description"]',{element(el){el.setAttribute("content",description)}});
       rw.on('link[rel="canonical"]',{element(el){el.setAttribute("href",canonical)}});
       rw.on("head",{element(el){
@@ -1860,7 +1860,7 @@ export default {
         el.append(
           `<link rel="canonical" href="${escapeHtml(canonical)}">`+
           `<meta property="og:type" content="website">`+
-          `<meta property="og:title" content="${escapeHtml(c.name)} RV Guides | RVFixWise">`+
+          `<meta property="og:title" content="${escapeHtml(c.name)} RV Guides | SepticBeacon">`+
           `<meta property="og:description" content="${escapeHtml(description)}">`+
           `<meta property="og:url" content="${escapeHtml(canonical)}">`+
           `<meta name="twitter:card" content="summary">`+
@@ -1878,7 +1878,7 @@ export default {
       rw.on("#live-home-popular",{element(el){el.setInnerContent(homePopularHtml(routeData.articles||[]),{html:true})}});
       rw.on("head",{element(el){
         const canonical=new URL("/",url.origin).href;
-        const homeSchema={"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"RVFixWise","url":canonical},{"@type":"Organization","name":"RVFixWise","url":canonical}]};
+        const homeSchema={"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"SepticBeacon","url":canonical},{"@type":"Organization","name":"SepticBeacon","url":canonical}]};
         el.append(`<link rel="canonical" href="${escapeHtml(canonical)}"><meta property="og:type" content="website"><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary"><meta name="robots" content="index,follow,max-image-preview:large"><script type="application/ld+json">${JSON.stringify(homeSchema).replace(/</g,"\\u003c")}</script>`,{html:true});
       }});
     }else if(routeType==="guides"&&routeData){
@@ -1888,12 +1888,12 @@ export default {
         const canonical=new URL("/blog",url.origin).href;
         const list=(routeData.articles||[]).slice(0,20).map((a,i)=>({"@type":"ListItem","position":i+1,"url":new URL("/blog/"+a.slug,url.origin).href,"name":a.title}));
         const schema={"@context":"https://schema.org","@graph":[
-          {"@type":"Blog","@id":canonical+"#blog","name":"RVFixWise Blog","description":"Practical RV troubleshooting, maintenance and ownership guides.","url":canonical,"publisher":{"@type":"Organization","name":"RVFixWise","url":url.origin}},
+          {"@type":"Blog","@id":canonical+"#blog","name":"SepticBeacon Blog","description":"Practical RV troubleshooting, maintenance and ownership guides.","url":canonical,"publisher":{"@type":"Organization","name":"SepticBeacon","url":url.origin}},
           {"@type":"ItemList","@id":canonical+"#articles","itemListElement":list}
         ]};
         el.append(
           `<link rel="canonical" href="${escapeHtml(canonical)}">`+
-          `<meta property="og:type" content="website"><meta property="og:title" content="RVFixWise Blog | RV Repair & Maintenance Guides"><meta property="og:description" content="Practical RV troubleshooting, maintenance and ownership guides built around real symptoms and RV systems."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
+          `<meta property="og:type" content="website"><meta property="og:title" content="SepticBeacon Blog | RV Repair & Maintenance Guides"><meta property="og:description" content="Practical RV troubleshooting, maintenance and ownership guides built around real symptoms and RV systems."><meta property="og:url" content="${escapeHtml(canonical)}"><meta name="twitter:card" content="summary">`+
           `<script type="application/ld+json">${JSON.stringify(schema).replace(/</g,"\\u003c")}</script>`,
           {html:true}
         );
