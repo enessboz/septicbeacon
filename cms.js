@@ -1,7 +1,7 @@
 const SUPABASE_URL="https://jyqngstekzvurbirangl.supabase.co";
-const ANON_KEY=window.RVFIXWISE_SUPABASE_ANON_KEY||"sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
-const $=(s,r=document)=>r.querySelector(s), token=()=>localStorage.getItem("rvf_access_token"), refreshToken=()=>localStorage.getItem("rvf_refresh_token");
-const ADMIN_BASE="/rvf-control-8n4k";
+const ANON_KEY=window.SEPTICBEACON_SUPABASE_ANON_KEY||"sb_publishable_pXOcXb8-JQqUSBcC14hm7A_Qnl5KThq";
+const $=(s,r=document)=>r.querySelector(s), token=()=>localStorage.getItem("sb_access_token"), refreshToken=()=>localStorage.getItem("sb_refresh_token");
+const ADMIN_BASE="/sb-control-8n4k";
 const loginPath=location.pathname===ADMIN_BASE+"/login";
 const adminPath=!loginPath&&(location.pathname===ADMIN_BASE||location.pathname.startsWith(ADMIN_BASE+"/"));
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -69,8 +69,8 @@ async function api(path,options={}){
   try{return JSON.parse(text)}
   catch{return text}
 }
-function saveSession(s){localStorage.setItem("rvf_access_token",s.access_token);localStorage.setItem("rvf_refresh_token",s.refresh_token)}
-function clearSession(){localStorage.removeItem("rvf_access_token");localStorage.removeItem("rvf_refresh_token")}
+function saveSession(s){localStorage.setItem("sb_access_token",s.access_token);localStorage.setItem("sb_refresh_token",s.refresh_token)}
+function clearSession(){localStorage.removeItem("sb_access_token");localStorage.removeItem("sb_refresh_token")}
 async function renew(){if(!refreshToken())return false;try{saveSession(await api("/auth/v1/token?grant_type=refresh_token",{method:"POST",auth:false,body:JSON.stringify({refresh_token:refreshToken()})}));return true}catch{return false}}
 async function requireAuth(){
   if(!token()&&!(await renew())){location.replace(ADMIN_BASE+"/login");return false}
@@ -90,9 +90,9 @@ async function requireAuth(){
     const member=memberships.find(m=>m.site_id===s.id);
     return {...s,role:member?.role||"viewer"};
   });
-  const preferred=localStorage.getItem("rvf_site_id");
+  const preferred=localStorage.getItem("sb_site_id");
   currentSiteCache=currentSites.find(x=>x.id===preferred)||currentSites[0];
-  localStorage.setItem("rvf_site_id",currentSiteCache.id);
+  localStorage.setItem("sb_site_id",currentSiteCache.id);
   currentUser.cmsRole=currentSiteCache.role;
   currentSiteTimezone=currentSiteCache.timezone||"America/New_York";
   document.documentElement.style.visibility="visible";
@@ -115,12 +115,12 @@ function renderAdminNavigation(){
     const active=href===ADMIN_BASE?path===ADMIN_BASE:(path===href||path.startsWith(href+"/"));
     return `<a class="${active?"active":""}" href="${href}"><span class="nav-ico">${icon}</span><span>${label}</span></a>`;
   };
-  const current=currentSiteCache||currentSites[0]||{name:"RVFixWise",domain:"rvfixwise.com"};
+  const current=currentSiteCache||currentSites[0]||{name:"SepticBeacon",domain:"septicbeacon.com"};
   const siteControl=currentSites.length>1
     ? `<select id="admin-site-select" class="admin-site-select" aria-label="Select site">${currentSites.map(s=>`<option value="${esc(s.id)}" ${s.id===current.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select><small>${esc(current.domain||"")}</small>`
-    : `<b>${esc(current.name||"RVFixWise")}</b><small>${esc(current.domain||"rvfixwise.com")}</small>`;
+    : `<b>${esc(current.name||"SepticBeacon")}</b><small>${esc(current.domain||"septicbeacon.com")}</small>`;
   side.innerHTML=`
-    <a class="brand admin-brand-v2" href="${ADMIN_BASE}"><span class="brandmark">R</span><span>RVFixWise<small>Control Center</small></span></a>
+    <a class="brand admin-brand-v2" href="${ADMIN_BASE}"><span class="brandmark">R</span><span>SepticBeacon<small>Control Center</small></span></a>
     <div class="admin-site-pill"><span class="site-dot"></span><div>${siteControl}</div></div>
     <div class="admin-group-label">Overview</div>
     <nav class="admin-menu">${item(ADMIN_BASE,"Dashboard","⌂")}</nav>
@@ -151,7 +151,7 @@ function renderAdminNavigation(){
   `;
   side.style.visibility="visible";
   $("#admin-site-select")?.addEventListener("change",e=>{
-    localStorage.setItem("rvf_site_id",e.target.value);
+    localStorage.setItem("sb_site_id",e.target.value);
     if(location.pathname===ADMIN_BASE+"/quick-entry"&&new URLSearchParams(location.search).get("id")){
       location.assign(ADMIN_BASE+"/articles");
     }else location.reload();
@@ -172,7 +172,7 @@ if(loginPath){
 }
 async function site(){
   if(currentSiteCache)return currentSiteCache;
-  const r=await api("/rest/v1/sites?domain=eq.rvfixwise.com&select=id,name,domain,timezone,locale");
+  const r=await api("/rest/v1/sites?domain=eq.septicbeacon.com&select=id,name,domain,timezone,locale");
   if(!r.length)throw new Error("Site record not found");
   currentSiteCache=r[0];
   currentSiteTimezone=currentSiteCache.timezone||"America/New_York";
@@ -289,12 +289,12 @@ async function adminJson(path,options={}){
   if(!token()&&!(await renew()))throw new Error("Admin session expired. Please sign in again.");
   let r=await fetch(path,{
     ...options,
-    headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("rvf_site_id"))?{"X-RVF-Site-ID":currentSiteCache?.id||localStorage.getItem("rvf_site_id")}:{})}
+    headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("sb_site_id"))?{"X-SB-Site-ID":currentSiteCache?.id||localStorage.getItem("sb_site_id")}:{})}
   });
   if(r.status===401 && await renew()){
     r=await fetch(path,{
       ...options,
-      headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("rvf_site_id"))?{"X-RVF-Site-ID":currentSiteCache?.id||localStorage.getItem("rvf_site_id")}:{})}
+      headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("sb_site_id"))?{"X-SB-Site-ID":currentSiteCache?.id||localStorage.getItem("sb_site_id")}:{})}
     });
   }
   const text=await r.text();
@@ -881,7 +881,7 @@ async function publicArticle(){
     const rows=await api(`/rest/v1/articles?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=title,slug,excerpt,content_markdown,published_at,seo_title,meta_description,featured_image_url,featured_image_alt,categories(name,slug)`,{auth:false});
     if(!rows.length){location.replace("/404.html");return}
     const a=rows[0];
-    document.title=`${a.seo_title||a.title} | RVFixWise`;
+    document.title=`${a.seo_title||a.title} | SepticBeacon`;
     $('meta[name="description"]')?.setAttribute("content",a.meta_description||a.excerpt||"");
     const canonical=$('link[rel="canonical"]');
     if(canonical)canonical.setAttribute("href",new URL(`/blog/${a.slug}`,location.origin).href);
@@ -898,7 +898,7 @@ async function publicArticle(){
     main.innerHTML=`<section class="section"><div class="wrap"><div class="no-results"><h1>Article could not be loaded</h1><p>${esc(err.message)}</p></div></div></section>`;
   }
 }
-async function publicCategory(){if(!location.pathname.startsWith("/category/"))return;const main=$("main");if(main?.dataset.serverRendered==="1")return;const slug=new URLSearchParams(location.search).get("slug")||location.pathname.split("/").filter(Boolean).pop();const cats=await api(`/rest/v1/categories?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=id,name,slug`,{auth:false});if(!cats.length){location.replace("/404.html");return}const c=cats[0],articles=await api(`/rest/v1/articles?category_id=eq.${c.id}&status=eq.published&select=title,slug,excerpt,content_type,published_at&order=published_at.desc`,{auth:false});document.title=`${c.name} RV Guides | RVFixWise`;$('main').innerHTML=`<section class="category-hero"><div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / RV Systems / ${esc(c.name)}</div><div class="category-hero-card"><div><div class="kicker"><span class="dot"></span> ${esc(c.name)}</div><h1>${esc(c.name)} RV repair guides</h1><p>Practical troubleshooting and maintenance guidance.</p></div><div class="category-stats"><div class="category-stat"><b>${articles.length}</b><span>Published guides</span></div></div></div></div></section><section class="section"><div class="wrap"><div class="guide-grid">${articles.map(a=>`<a class="guide-card" href="/${c.slug}/${a.slug}"><div class="thumb"></div><div class="article-copy"><div class="meta"><span class="badge">${esc(a.content_type)}</span></div><h3>${esc(a.title)}</h3><p>${esc(a.excerpt||"Open this practical RV guide.")}</p></div></a>`).join("")||"<p>No published guides yet.</p>"}</div></div></section>`}
+async function publicCategory(){if(!location.pathname.startsWith("/category/"))return;const main=$("main");if(main?.dataset.serverRendered==="1")return;const slug=new URLSearchParams(location.search).get("slug")||location.pathname.split("/").filter(Boolean).pop();const cats=await api(`/rest/v1/categories?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=id,name,slug`,{auth:false});if(!cats.length){location.replace("/404.html");return}const c=cats[0],articles=await api(`/rest/v1/articles?category_id=eq.${c.id}&status=eq.published&select=title,slug,excerpt,content_type,published_at&order=published_at.desc`,{auth:false});document.title=`${c.name} RV Guides | SepticBeacon`;$('main').innerHTML=`<section class="category-hero"><div class="wrap"><div class="breadcrumb"><a href="/">Home</a> / RV Systems / ${esc(c.name)}</div><div class="category-hero-card"><div><div class="kicker"><span class="dot"></span> ${esc(c.name)}</div><h1>${esc(c.name)} RV repair guides</h1><p>Practical troubleshooting and maintenance guidance.</p></div><div class="category-stats"><div class="category-stat"><b>${articles.length}</b><span>Published guides</span></div></div></div></div></section><section class="section"><div class="wrap"><div class="guide-grid">${articles.map(a=>`<a class="guide-card" href="/${c.slug}/${a.slug}"><div class="thumb"></div><div class="article-copy"><div class="meta"><span class="badge">${esc(a.content_type)}</span></div><h3>${esc(a.title)}</h3><p>${esc(a.excerpt||"Open this practical RV guide.")}</p></div></a>`).join("")||"<p>No published guides yet.</p>"}</div></div></section>`}
 
 
 async function publicHome(){
@@ -1022,7 +1022,7 @@ async function loadAdminView(){
     const checked=v=>v!==false?"checked":"";
     // Populate the always-visible SEO Settings form in admin-seo.html.
     const setChecked=(sel,value)=>{const el=$(sel);if(el)el.checked=value!==false};
-    if($("#seo-site-name"))$("#seo-site-name").value=cfg.site_name||"RVFixWise";
+    if($("#seo-site-name"))$("#seo-site-name").value=cfg.site_name||"SepticBeacon";
     if($("#seo-default-description"))$("#seo-default-description").value=cfg.default_meta_description||"";
     setChecked("#seo-sitemap-enabled",cfg.sitemap_enabled);
     setChecked("#seo-sitemap-categories",cfg.sitemap_include_categories);
@@ -1042,7 +1042,7 @@ async function loadAdminView(){
         <section class="admin-card seo-admin-settings">
           <div class="seo-admin-head"><div><span class="subtle">Sitewide technical SEO</span><h3>SEO Settings</h3></div><span class="seo-status-badge">Live</span></div>
           <form id="seo-core-form">
-            <label class="field"><span>Site name</span><input id="seo-site-name" value="${esc(cfg.site_name||"RVFixWise")}"></label>
+            <label class="field"><span>Site name</span><input id="seo-site-name" value="${esc(cfg.site_name||"SepticBeacon")}"></label>
             <label class="field"><span>Default meta description</span><textarea id="seo-default-description" rows="3">${esc(cfg.default_meta_description||"")}</textarea><small>Hard character limits are not enforced. Keep it useful and descriptive.</small></label>
             <div class="seo-toggle-grid">
               <label class="seo-toggle"><input id="seo-sitemap-enabled" type="checkbox" ${checked(cfg.sitemap_enabled)}><span><b>Dynamic sitemap</b><small>Published articles are generated automatically from Supabase.</small></span></label>
@@ -1293,7 +1293,7 @@ function initBlogEnhancements(){
 
   document.querySelectorAll("[data-ai-open]").forEach(btn=>{
     btn.addEventListener("click",async()=>{
-      const base=btn.dataset.aiPrompt||"RVFixWise: Please summarize this page in English.";
+      const base=btn.dataset.aiPrompt||"SepticBeacon: Please summarize this page in English.";
       const prompt=base+" Source URL: "+location.href;
       const provider=btn.dataset.aiProvider||"";
       const baseUrl=btn.dataset.aiOpen||"";
@@ -1314,8 +1314,8 @@ function initBlogEnhancements(){
       else if(provider==="gemini")target="https://gemini.google.com/";
 
       if(status){
-        if(provider==="gemini"&&copied) status.textContent="RVFixWise prompt copied automatically. Gemini does not provide a reliable external prompt-prefill link, so paste it with Ctrl+V / Cmd+V.";
-        else if(copied) status.textContent="Opening "+(btn.querySelector("b")?.textContent||"AI")+" with this page’s RVFixWise summary prompt. A copy is also on your clipboard.";
+        if(provider==="gemini"&&copied) status.textContent="SepticBeacon prompt copied automatically. Gemini does not provide a reliable external prompt-prefill link, so paste it with Ctrl+V / Cmd+V.";
+        else if(copied) status.textContent="Opening "+(btn.querySelector("b")?.textContent||"AI")+" with this page’s SepticBeacon summary prompt. A copy is also on your clipboard.";
         else status.textContent="Opening "+(btn.querySelector("b")?.textContent||"AI")+". If the prompt is not prefilled, copy this page URL into the chat.";
       }
       if(target)window.open(target,"_blank","noopener,noreferrer");
@@ -1403,7 +1403,7 @@ async function gscSetup(){
       <div class="integration-card">
         <div class="subtle">STEP 2</div>
         <h3 style="margin:2px 0 4px">Choose property</h3>
-        <p class="subtle">Bağlı Google hesabındaki property'lerden RVFixWise olanı seç.</p>
+        <p class="subtle">Bağlı Google hesabındaki property'lerden SepticBeacon olanı seç.</p>
         <div class="field" style="margin-top:12px">
           <label>Search Console property</label>
           <select id="gsc-property-select">
@@ -1483,7 +1483,7 @@ async function gscSetup(){
       <div class="integration-card">
         <div class="subtle">STEP 4</div>
         <h3 style="margin:2px 0 4px">Sync Search Console data</h3>
-        <p class="subtle">Property seçildikten sonra GSC verilerini RVFixWise paneline aktar.</p>
+        <p class="subtle">Property seçildikten sonra GSC verilerini SepticBeacon paneline aktar.</p>
         <div class="side-list">
           <div><span>Last sync</span><b>${integration.last_sync_at?new Date(integration.last_sync_at).toLocaleString():"Never"}</b></div>
           <div><span>Status</span><b>${esc(integration.status||"disconnected")}</b></div>
@@ -1515,7 +1515,7 @@ async function gscSetup(){
   const fetchWorkerJson=async(path,options={})=>{
     const r=await fetch(path,{
       ...options,
-      headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("rvf_site_id"))?{"X-RVF-Site-ID":currentSiteCache?.id||localStorage.getItem("rvf_site_id")}:{})}
+      headers:{...(options.headers||{}),Authorization:`Bearer ${token()}`,...((currentSiteCache?.id||localStorage.getItem("sb_site_id"))?{"X-SB-Site-ID":currentSiteCache?.id||localStorage.getItem("sb_site_id")}:{})}
     });
     const text=await r.text();
     let data={};
