@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Media Library | SepticBeacon CMS</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="admin-body" data-admin-view="media">
+<div class="admin-shell">
+<aside class="admin-side">
+  <a class="brand" href="/sb-control-8n4k"><span class="brandmark">R</span>SepticBeacon <small style="font-size:10px;color:#9fb0a9">CMS</small></a>
+  <div class="admin-group-label">İçerik</div>
+  <nav class="admin-menu">
+    <a href="/sb-control-8n4k">▦ Dashboard</a>
+    <a href="/sb-control-8n4k/articles">✎ İçerik Kütüphanesi</a>
+    <a href="/sb-control-8n4k/quick-entry">＋ Quick Entry</a>
+    <a class="active" href="/sb-control-8n4k/media">▧ Media Library</a>
+    <a href="/sb-control-8n4k/topic-map">◉ Topic Map</a>
+    <a href="/sb-control-8n4k/calendar">▣ Content Calendar</a>
+    <a href="/sb-control-8n4k/refresh">↻ Refresh Queue</a>
+  </nav>
+  <div class="admin-group-label">SEO & Growth</div>
+  <nav class="admin-menu">
+    <a href="/sb-control-8n4k/seo">◎ SEO Overview</a>
+    <a href="/sb-control-8n4k/seo#technical-seo">▤ Sitemap & Robots</a>
+    <a href="/sb-control-8n4k/gsc">G Search Console</a>
+    <a href="/sb-control-8n4k/opportunities">↗ Content Opportunities</a>
+    <a href="/sb-control-8n4k/internal-links">⛓ Internal Links</a>
+    <a href="/sb-control-8n4k/crawl">⌘ Crawl Monitor</a>
+    <a href="/sb-control-8n4k/site-health">♥ Site Health</a>
+    <a href="/sb-control-8n4k/redirects">↪ Redirects</a>
+  </nav>
+  <div class="admin-group-label">Operasyon</div>
+  <nav class="admin-menu">
+    <a href="/sb-control-8n4k/alerts">! Alerts</a>
+    <a href="/sb-control-8n4k/ai-jobs">✦ Jobs</a>
+  </nav>
+  <div class="admin-group-label">Data & Sistem</div>
+  <nav class="admin-menu">
+    <a href="/sb-control-8n4k/analytics">▥ Analytics</a>
+    <a href="/sb-control-8n4k/integrations">⚙ Integrations</a>
+  </nav>
+  <div class="admin-side-foot">SepticBeacon CMS<br>Supabase + Cloudflare</div>
+</aside>
+<main class="admin-main">
+  <div class="admin-top">
+    <div><div class="subtle">R2 Media Library · automatic WebP</div><h1>Media Library</h1></div>
+    <div class="admin-actions"><a class="btn" href="/sb-control-8n4k/quick-entry">Quick Entry</a></div>
+  </div>
+
+  <div class="media-admin-layout">
+    <section class="admin-card media-upload-card">
+      <div class="integration-head"><div><h3 style="margin:0">Yeni görsel yükle</h3><p class="subtle">PNG/JPG/AVIF yükle; sistem tarayıcıda WebP’ye çevirip sıkıştırır.</p></div><span class="work-badge">WEBP</span></div>
+      <div id="media-dropzone" class="media-dropzone">
+        <b>Görsel seç veya buraya sürükle</b>
+        <span>Maksimum uzun kenar 2000px · WebP output</span>
+        <input id="media-library-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+      </div>
+      <div class="quick-grid" style="margin-top:14px">
+        <div class="quick-field full"><label for="media-library-alt">Alt text</label><input id="media-library-alt" placeholder="Describe the image accurately"></div>
+        <div class="quick-field full"><label for="media-library-caption">Caption <span class="subtle">(optional)</span></label><input id="media-library-caption"></div>
+      </div>
+      <button id="media-library-upload" type="button" class="btn primary" style="margin-top:12px">Compress & upload</button>
+      <div id="media-library-upload-status" class="cms-message"></div>
+    </section>
+
+    <section>
+      <div class="media-library-toolbar">
+        <div><b id="media-library-count">Media</b><div class="subtle">En yeni yüklenenler önce</div></div>
+        <button id="media-library-refresh" type="button" class="btn">Refresh</button>
+      </div>
+      <div id="admin-media-grid" class="media-library-grid"><div class="empty-state">Loading media…</div></div>
+    </section>
+  </div>
+</main>
+</div>
+<script type="module" src="/cms.js"></script>
+</body></html>

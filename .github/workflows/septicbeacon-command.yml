@@ -1,0 +1,29 @@
+name: SepticBeacon Command Bridge
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  execute:
+    if: >
+      github.event.issue.user.login == 'enessboz' &&
+      startsWith(github.event.issue.title, '[SEPTICBEACON COMMAND]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Execute SepticBeacon command
+        run: node .github/scripts/septicbeacon-command.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEPTICBEACON_MCP_KEY: ${{ secrets.SEPTICBEACON_MCP_KEY }}

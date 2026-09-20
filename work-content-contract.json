@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "route": "/admin/content/new",
+  "default_action": "save_as_draft",
+  "fields": {
+    "title": "string|required",
+    "slug": "string|auto_if_blank",
+    "content_type": "enum|required",
+    "category": "string|required",
+    "primary_keyword": "string|required",
+    "search_intent": "string|required",
+    "seo_title": "string|required",
+    "meta_description": "string|required",
+    "canonical_path": "string|auto_if_blank",
+    "content_markdown": "markdown|required",
+    "sources": [
+      {
+        "label": "string|required",
+        "url": "url|optional",
+        "source_type": "enum|required"
+      }
+    ],
+    "internal_links": [
+      {
+        "anchor_text": "string|required",
+        "target_path": "string|required"
+      }
+    ],
+    "featured_image_prompt": "string|optional",
+    "featured_image_alt": "string|optional",
+    "reviewer_required": "boolean|required"
+  },
+  "actions": [
+    "save_draft",
+    "run_publish_checks",
+    "send_to_editorial_qa"
+  ],
+  "never_do_automatically": [
+    "publish",
+    "mark_reviewer_complete",
+    "fabricate_reviewer_identity",
+    "fabricate_sources"
+  ]
+}
