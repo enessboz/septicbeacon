@@ -871,8 +871,8 @@ function articleRelatedSidebarHtml(a){
 
 function articleRelatedBottomHtml(a,category){
   const related=Array.isArray(a.related)?a.related.slice(0,3):[];
-  if(!related.length)return '<div class="rvf-related-grid"><a href="/category/'+escapeHtml(category.slug||"guides")+'"><small>MORE FROM THIS SYSTEM</small><strong>'+escapeHtml(category.name||"Septic Guides")+'</strong><i>→</i></a><a href="/guides"><small>GUIDE LIBRARY</small><strong>Browse all septic guides</strong><i>→</i></a></div>';
-  const cards=related.map(function(item){ const media=item.featured_image_url?'<div class="rvf-related-article-media"><img src="'+escapeHtml(item.featured_image_url)+'" alt="'+escapeHtml(item.featured_image_alt||"")+'" loading="lazy"></div>':'<div class="rvf-related-article-media is-fallback"><span>'+escapeHtml((item.categories&&item.categories.name)||"RV")+'</span></div>'; return '<a class="rvf-related-article" href="/blog/'+escapeHtml(item.slug)+'">'+media+'<div class="rvf-related-article-copy"><small>'+escapeHtml((item.categories&&item.categories.name)||"Septic Guide")+'</small><strong>'+escapeHtml(item.title)+'</strong><span>Read guide →</span></div></a>'; }).join("");
+  if(!related.length)return '<div class="rvf-related-grid"><a href="/category/'+escapeHtml(category.slug||"guides")+'"><small>MORE IN THIS TOPIC</small><strong>'+escapeHtml(category.name||"Septic Guides")+'</strong><i>→</i></a><a href="/blog"><small>ALL GUIDES</small><strong>Browse the SepticBeacon library</strong><i>→</i></a></div>';
+  const cards=related.map(function(item){ const media=item.featured_image_url?'<div class="rvf-related-article-media"><img src="'+escapeHtml(item.featured_image_url)+'" alt="'+escapeHtml(item.featured_image_alt||"")+'" loading="lazy"></div>':'<div class="rvf-related-article-media is-fallback"><span>'+escapeHtml((item.categories&&item.categories.name)||"Septic")+'</span></div>'; return '<a class="rvf-related-article" href="/blog/'+escapeHtml(item.slug)+'">'+media+'<div class="rvf-related-article-copy"><small>'+escapeHtml((item.categories&&item.categories.name)||"Septic Guide")+'</small><strong>'+escapeHtml(item.title)+'</strong><span>Read guide →</span></div></a>'; }).join("");
   return '<div class="rvf-related-articles">'+cards+'</div>';
 }
 function articleHtml(a){
@@ -922,9 +922,7 @@ function articleHtml(a){
       </aside>
 
       <main class="rvf-blog-main">
-        ${a.excerpt?`<section class="rvf-quick-summary"><span>QUICK ANSWER</span><p>${escapeHtml(a.excerpt)}</p></section>`:""}
-
-        ${articleAiToolsHtml(a)}
+        ${(a.quick_answer||a.excerpt)?`<section class="rvf-quick-summary"><span>QUICK ANSWER</span><p>${escapeHtml(a.quick_answer||a.excerpt)}</p></section>`:""}
 
         <article class="rvf-prose">
           ${bodyHtml}
@@ -941,8 +939,8 @@ function articleHtml(a){
                 </section>
 
         <section class="rvf-blog-cta">
-          <div><span>SEPTICBEACON</span><h2>Diagnose first. Replace parts second.</h2><p>Use the guide library to continue troubleshooting by symptom or septic system.</p></div>
-          <a class="btn lime" href="/guides">Find the next guide</a>
+          <div><span>SEPTICBEACON</span><h2>Know what to check before the problem gets expensive.</h2><p>Browse practical maintenance, troubleshooting, cost and inspection guides for homeowners.</p></div>
+          <a class="btn lime" href="/blog">Browse all guides</a>
         </section>
       </main>
 
@@ -950,10 +948,10 @@ function articleHtml(a){
         <div class="rvf-ad-reserved" hidden data-ad-placement="article-rail-1"></div>
         ${articleRelatedSidebarHtml(a)}
         <div class="rvf-side-card">
-          <span>NEED ANOTHER PATH?</span>
-          <strong>Browse by septic system</strong>
-          <p>Jump to maintenance, problems, costs, system types and more.</p>
-          <a href="/">Explore systems →</a>
+          <span>EXPLORE SEPTICBEACON</span>
+          <strong>Browse by topic</strong>
+          <p>Maintenance, problems, costs, inspections, system types and sizing.</p>
+          <a href="/">Explore topics →</a>
         </div>
       </aside>
     </div>
